@@ -16,23 +16,6 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 	  <url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
-	<filter>
-	    <filter-name>jersey-filter</filter-name>
-	    <filter-class>com.listerly.config.jersey.JerseyFilter</filter-class>
-	    <init-param>
-	        <param-name>javax.ws.rs.Application</param-name>
-	        <param-value>com.listerly.config.jersey.JerseyConfiguration</param-value>
-	    </init-param>
-	    <init-param>
-	        <param-name>jersey.config.server.provider.classnames</param-name>
-	        <param-value>org.glassfish.jersey.server.mvc.freemarker.FreemarkerMvcFeature</param-value>
-	    </init-param>
-	</filter>
-    <filter-mapping>
-        <filter-name>jersey-filter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-	
 	<session-config>
 	        <session-timeout>14400</session-timeout>
 	</session-config>	

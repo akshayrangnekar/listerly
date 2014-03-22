@@ -2,6 +2,7 @@ package com.listerly.config.jersey;
 
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import javax.inject.Singleton;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import java.io.IOException;
  * See: https://developers.google.com/appengine/docs/java/config/appconfig
  */
 @SuppressWarnings("serial")
+@Singleton
 public class JerseyFilter extends ServletContainer {
 
     @Override

@@ -1,5 +1,7 @@
 package com.listerly.resources;
 
+import static com.listerly.config.objectify.OfyService.ofy;
+
 import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -9,10 +11,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -102,33 +100,17 @@ public class HeyResource {
 		SimpleTestEntity ste = new SimpleTestEntity();
 		ste.setName(name);
 		
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("transactions-optional");
-        EntityManager entityManager = factory.createEntityManager();
-        entityManager.getTransaction().begin();
-        entityManager.persist(ste);
-        entityManager.getTransaction().commit();
-
+		ofy().save().entity(ste).now();
 		return map;
 	}
 
 	@GET
-	@Produces(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/retrieve")
-	@Template(name="/foo.ftl")
-	public Map<String, Object> retrieve() {
-		Map<String, Object> map = new HashMap<>();
-		
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("transactions-optional");
-        EntityManager entityManager = factory.createEntityManager();
-        entityManager.getTransaction().begin();
-        Query q = entityManager.createQuery("select t from " + SimpleTestEntity.class.getSimpleName() + " t");
-        List<?> list = q.getResultList();
-        map.put("foo", "Number of Entries");
-        map.put("bar", "The number of database entries is: " + list.size());
-        
-        entityManager.getTransaction().commit();
+	public Object retrieve() {
 
-		return map;
+		List<SimpleTestEntity> all= ofy().load().type(SimpleTestEntity.class).list();
+		return all;
 	}
 
 	@GET
