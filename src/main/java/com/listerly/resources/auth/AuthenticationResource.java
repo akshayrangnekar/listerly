@@ -24,12 +24,11 @@ import org.scribe.oauth.OAuthService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.listerly.resources.HeyResource;
 import com.listerly.services.AuthenticationServiceProvider;
 
 @Path("/authenticate/")
 public class AuthenticationResource {
-	private static Logger log = Logger.getLogger(HeyResource.class.getName());	
+	private static Logger log = Logger.getLogger(AuthenticationResource.class.getName());	
 
 	@Inject AuthenticationServiceProvider authServiceProvider;
 	

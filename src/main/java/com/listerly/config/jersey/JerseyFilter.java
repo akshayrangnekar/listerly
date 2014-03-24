@@ -23,7 +23,8 @@ public class JerseyFilter extends ServletContainer {
             throws IOException, ServletException {
 
         String path = req.getServletPath();
-        if (path.startsWith("/_ah/") || path.equals("/form")) {
+        if (path.startsWith("/_ah/") || path.equals("/form") || path.startsWith("/appstats/")) {
+        	//System.out.println("HELLO");
             chain.doFilter(req, res);
         } else {
             super.doFilter(req, res, chain);

@@ -4,10 +4,10 @@ import static com.listerly.config.objectify.OfyService.ofy;
 
 import java.io.IOException;
 import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -33,85 +33,77 @@ import org.scribe.oauth.OAuthService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.listerly.SecondTest;
-import com.listerly.TestClass;
-import com.listerly.api.SimpleReturnObject;
-import com.listerly.entities.SimpleTestEntity;
+import com.googlecode.objectify.VoidWork;
+import com.listerly.dao.UserDAO;
+import com.listerly.entities.IUser;
 
 @Path("/Hey")
 public class HeyResource {
 	private static Logger log = Logger.getLogger(HeyResource.class.getName());	
 	private static Token theToken;
-	
-	@Inject TestClass first;
-	@Inject SecondTest second;
-	
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String get() {
-		return ("Hey there");
-	}
-	
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	@Path("/foo")
-	public String foo(@QueryParam("test") String test) {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
-		StringBuilder builder = new StringBuilder();
-
-		builder.append("Hi there. You entered ").append(test).append("\n");
-		builder.append("The first date is:").append(sdf.format(first.getDate())).append("\n");
-		builder.append("The second date is:").append(sdf.format(second.getDate())).append("\n");
 		
-		return builder.toString();
-	}
+	@Inject UserDAO userDAO;
 	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/json")
-	public Object json() {
-		SimpleReturnObject ret = new SimpleReturnObject();
-		
-		ret.setFruit("Apple");
-		ret.setHome("Hong Kong");
-		
-		return ret;
-	}
-	
-	@GET
-	@Produces(MediaType.TEXT_HTML)
-	@Path("/template")
-	@Template(name="/foo.ftl")
-	public Map<String, Object> template() {
-		Map<String, Object> map = new HashMap<>();
-		map.put("foo", "Akshay");
-		map.put("bar", "Yo Yo Whatsup?");
-		return map;
-	}
-	
-	@GET
-	@Produces(MediaType.TEXT_HTML)
-	@Path("/persist")
-	@Template(name="/foo.ftl")
-	public Map<String, Object> persist(@QueryParam("name") String name, @QueryParam("message") String message) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("foo", name);
-		map.put("bar", message);
-		SimpleTestEntity ste = new SimpleTestEntity();
-		ste.setName(name);
-		
-		ofy().save().entity(ste).now();
-		return map;
-	}
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/retrieve")
-	public Object retrieve() {
-
-		List<SimpleTestEntity> all= ofy().load().type(SimpleTestEntity.class).list();
-		return all;
-	}
+//	@GET
+//	@Produces(MediaType.TEXT_PLAIN)
+//	@Path("/foo")
+//	public String foo(@QueryParam("test") String test) {
+//		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+//		StringBuilder builder = new StringBuilder();
+//
+//		builder.append("Hi there. You entered ").append(test).append("\n");
+//		builder.append("The first date is:").append(sdf.format(first.getDate())).append("\n");
+//		builder.append("The second date is:").append(sdf.format(second.getDate())).append("\n");
+//		
+//		return builder.toString();
+//	}
+//	
+//	@GET
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Path("/json")
+//	public Object json() {
+//		SimpleReturnObject ret = new SimpleReturnObject();
+//		
+//		ret.setFruit("Apple");
+//		ret.setHome("Hong Kong");
+//		
+//		return ret;
+//	}
+//	
+//	@GET
+//	@Produces(MediaType.TEXT_HTML)
+//	@Path("/template")
+//	@Template(name="/foo.ftl")
+//	public Map<String, Object> template() {
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("foo", "Akshay");
+//		map.put("bar", "Yo Yo Whatsup?");
+//		return map;
+//	}
+//	
+//	@GET
+//	@Produces(MediaType.TEXT_HTML)
+//	@Path("/persist")
+//	@Template(name="/foo.ftl")
+//	public Map<String, Object> persist(@QueryParam("name") String name, @QueryParam("message") String message) {
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("foo", name);
+//		map.put("bar", message);
+//		SimpleTestEntity ste = new SimpleTestEntity();
+//		ste.setName(name);
+//		
+//		ofy().save().entity(ste).now();
+//		return map;
+//	}
+//
+//	@GET
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Path("/retrieve")
+//	public Object retrieve() {
+//
+//		List<SimpleTestEntity> all= ofy().load().type(SimpleTestEntity.class).list();
+//		return all;
+//	}
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -258,4 +250,83 @@ public class HeyResource {
 		Map<String, Object> map = new HashMap<>();
 		return map;
 	}
+	
+//	@GET
+//	@Path("/test1")
+//	@Produces(MediaType.TEXT_PLAIN)
+//	public String test1() {
+//		Date start = new Date();
+//		Random rnd = new Random();
+//		
+//		for (int i = 0; i < 250; i++) {
+//			int nextInt = rnd.nextInt();
+//			UserImpl usr = new UserImpl();
+//			usr.setEmail("" + nextInt + "@google.com");
+//			usr.setFacebookId("" + nextInt);
+//			userDAO.save(usr);
+//		}
+//		
+//		Date end = new Date();
+//		
+//		return "Time taken was: " + (end.getTime() - start.getTime());
+//	}
+//	
+//	@GET
+//	@Path("/test2")
+//	@Produces(MediaType.TEXT_PLAIN)
+//	public String test2() {
+//		Date start = new Date();
+//		final Random rnd = new Random();
+//		ofy().transact(new VoidWork() {
+//	        public void vrun() {
+//	    		for (int i = 0; i < 250; i++) {
+//	    			int nextInt = rnd.nextInt();
+//	    			UserImpl usr = new UserImpl();
+//	    			usr.setEmail("" + nextInt + "@google.com");
+//	    			usr.setFacebookId("" + nextInt);
+//	    			userDAO.save(usr);
+//	    		}
+//	        }
+//	    });
+//		
+//		
+//		Date end = new Date();
+//		
+//		return "Time taken was: " + (end.getTime() - start.getTime());
+//	}
+	
+//	@GET
+//	@Path("/test4")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Object test4() {
+//		List<UserImpl> findAll = userDAO.findAllMethod2();
+//		return findAll;
+//	}
+	
+	@GET
+	@Path("/test5")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Object test5() {
+		List<? extends IUser> findAll = userDAO.findAll();
+		return findAll;
+	}
+	
+	@GET
+	@Path("/test6")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String test6() {
+		final Random rnd = new Random();
+		ofy().transact(new VoidWork() {
+	        public void vrun() {
+    			int nextInt = rnd.nextInt();
+    			IUser usr = userDAO.create();
+    			usr.setEmail("" + nextInt + "@google.com");
+    			usr.setFacebookId("" + nextInt);
+    			userDAO.save(usr);
+	        }
+	    });
+		
+		return "Created user. Use appstats to figure out timing. ";
+	}
+
 }
