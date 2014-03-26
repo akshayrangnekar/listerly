@@ -1,8 +1,6 @@
 package com.listerly.resources.auth;
 
-import java.io.IOException;
 import java.net.URI;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -15,73 +13,89 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Token;
-import org.scribe.model.Verb;
-import org.scribe.model.Verifier;
-import org.scribe.oauth.OAuthService;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.listerly.services.AuthenticationServiceProvider;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserServiceFactory;
+import com.listerly.entities.IUser;
+import com.listerly.services.authentication.AuthenticationServiceProvider;
+import com.listerly.session.SessionStore;
 
 @Path("/authenticate/")
 public class AuthenticationResource {
 	private static Logger log = Logger.getLogger(AuthenticationResource.class.getName());	
 
 	@Inject AuthenticationServiceProvider authServiceProvider;
+	@Inject SessionStore session;
 	
 	@GET
 	@Path("facebook") 
 	public Response startFacebookAuthentication(@HeaderParam("referer") String referer, @Context HttpServletRequest req) {
-		req.getSession(true).setAttribute("referer", referer);
-		log.fine("Starting facebook authentication");
-		OAuthService service = authServiceProvider.getService("facebook");
-		String authorizationUrl = service.getAuthorizationUrl(null);
-		URI uri = UriBuilder.fromUri(authorizationUrl).build();
-		Response response = Response.seeOther(uri).build();
-		return response;
+		return startOAuthAuthentication(referer, req, "Facebook");
 	}
 	
 	@GET
 	@Path("facebook/callback/")
 	public Response facebookAuthenticationCallback(@QueryParam("code") String code, 
 			@Context HttpServletRequest req) {
-		final String PROTECTED_RESOURCE_URL = "https://graph.facebook.com/me";
+		return OAuthenticationCallback(code, req, "Facebook");
+	}
+	
+	@GET
+	@Path("twitter")
+	public Response startTwitterAuthentication(@HeaderParam("referer") String referer, @Context HttpServletRequest req) {
+		return startOAuthAuthentication(referer, req, "Twitter");
+	}
+	
+	@GET
+	@Path("twitter/callback/")
+	public Response twitterAuthenticationCallback(@QueryParam("oauth_verifier") String code, 
+			@Context HttpServletRequest req) {
+		return OAuthenticationCallback(code, req, "Twitter");
+	}
+	
+	@GET
+	@Path("google")
+	public Response startGoogleAuthentication(@HeaderParam("referer") String referer, @Context HttpServletRequest req) {
+		return startOAuthAuthentication(referer, req, "Google");
+	}
 
-		log.fine("Callback for facebook authentication");
-		OAuthService service = authServiceProvider.getService("facebook");
-	    Verifier verifier = new Verifier(code);
-	    Token accessToken = service.getAccessToken(null, verifier);
-	    log.finest("Now we're going to access a protected resource...");
-	    OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
-	    service.signRequest(accessToken, request);
-	    org.scribe.model.Response response = request.send();
-	    log.finest("Got it! Lets see what we found...");
-	    log.info("Code: " + response.getCode());
-	    log.info(response.getBody());
-
-	    ObjectMapper mapper = new ObjectMapper();
-	    JsonNode node;
-		try {
-			node = mapper.readTree(response.getBody());
-		    String id = node.get("id").asText();
-		    String name = node.get("name").asText();
-		    String email = node.get("email").asText();
-		    log.info(String.format("Got back a response with id %s, email: %s, name: %s", id, name, email));
-		    req.getSession().setAttribute("user", id);
-		} catch (JsonProcessingException e) {
-			log.log(Level.WARNING, "Exception while processing response from Facebook", e);
-		} catch (IOException e) {
-			log.log(Level.WARNING, "Exception while processing response from Facebook", e);
+	@GET
+	@Path("google/callback/")
+	public Response googleAuthenticationCallback(@Context HttpServletRequest req) {
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		if (user == null) {
+			log.info("Login did not succeed.");
+			
+		} 
+		return OAuthenticationCallback(user.getEmail(), req, "Google");
+	}
+	
+	private Response startOAuthAuthentication(String referer, HttpServletRequest req, String serviceName) {
+		log.fine("Starting "+ serviceName +" authentication");
+		//req.getSession(true).setAttribute("referer", referer);
+		session.put("referer", referer);
+		URI uri = authServiceProvider.getAuthenticationUrl(serviceName);
+		Response response = Response.seeOther(uri).build();
+		return response;
+	}
+	
+	private Response OAuthenticationCallback(String code, HttpServletRequest req, String serviceName) {
+		IUser user = authServiceProvider.getAuthenticatedUser(serviceName, code);
+		if (user == null) {
+			log.info("Did not succeed with " + serviceName + " authentication.");
+		} else {
+			log.info("Succeeded with " + serviceName + " authentication.");
+			log.info("Putting data into session: " + session);
+//			session.setUser(user);
+//			session.setMessage("Yo what's up dawg: " + serviceName);
+			session.put("message", "Log in successful");
+			session.put("user", user.getEmail());
+			log.info("Put user: " + user.getId());
 		}
-		
-		Object attribute = req.getSession().getAttribute("referer");
-		log.info("Finished Facebook authentication. Sending back to " + attribute.toString());
+		Object attribute = session.get("referer");//req.getSession().getAttribute("referer");
+		log.info("Finished " + serviceName + " authentication. Sending back to " + attribute.toString());
 		URI uri = UriBuilder.fromUri(attribute.toString()).build();
 		Response resp = Response.seeOther(uri).build();
 		return resp;
-
 	}
+
 }

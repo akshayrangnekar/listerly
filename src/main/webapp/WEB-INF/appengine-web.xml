@@ -4,7 +4,7 @@
   <version>1-001</version>
   <threadsafe>true</threadsafe>
   <sessions-enabled>true</sessions-enabled>
-  <async-session-persistence enabled="true" />
+  <async-session-persistence enabled="false" />
   <system-properties>
       <property name="file.encoding" value="UTF-8"/>
       <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>

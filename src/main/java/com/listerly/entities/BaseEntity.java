@@ -1,5 +1,7 @@
 package com.listerly.entities;
 
-public interface BaseEntity {
+import java.io.Serializable;
+
+public interface BaseEntity extends Serializable {
 	public Long getId();
 }

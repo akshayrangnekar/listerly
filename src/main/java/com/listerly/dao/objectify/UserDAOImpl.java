@@ -9,4 +9,20 @@ public class UserDAOImpl extends AbstractDAO<IUser> implements UserDAO {
 	public UserDAOImpl() {
 		super(User.class);
 	}
+
+	@Override
+	public IUser findByFacebookId(String inId) {
+		return super.findByField("facebookId", inId);
+	}
+	
+	@Override
+	public IUser findByGoogleId(String inId) {
+		return super.findByField("googleId", inId);
+	}
+	
+	@Override
+	public IUser findByTwitterId(String inId) {
+		return super.findByField("twitterId", inId);
+	}
+
 }

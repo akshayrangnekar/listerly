@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.datastore.ReadPolicy.Consistency;
 import com.googlecode.objectify.TxnType;
 import com.listerly.config.objectify.OfyTransactionInterceptor.Transact;
 
@@ -26,16 +27,9 @@ abstract class AbstractDAO<T> {
 	
 	@Transact(TxnType.REQUIRED)
 	public List<? extends T> findAll() {
-		List<? extends T> all= ofy().load().type(cls).list();
+		List<? extends T> all= ofy().consistency(Consistency.STRONG).load().type(cls).list();
 		return all;
 	}
-	
-//	@Transact(TxnType.REQUIRED) 
-//	public List<T> findAllMethod2() {
-//		Collection<? extends T> values = ofy().consistency(Consistency.EVENTUAL).load().keys(ofy().load().type(cls).keys()).values();
-//		List<T> newVals = new ArrayList<>(values);
-//		return newVals;
-//	}
 	
 	public T create() {
 		try {
@@ -47,4 +41,10 @@ abstract class AbstractDAO<T> {
 		}
 		return null;
 	}
+	
+	public T findByField(String field, String value) {
+		T user = ofy().consistency(Consistency.STRONG).load().type(cls).filter(field, value).first().now();
+		return user;
+	}
+
 }
