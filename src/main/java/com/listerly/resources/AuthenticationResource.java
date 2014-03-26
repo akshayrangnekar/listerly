@@ -1,4 +1,4 @@
-package com.listerly.resources.auth;
+package com.listerly.resources;
 
 import java.net.URI;
 import java.util.logging.Logger;
