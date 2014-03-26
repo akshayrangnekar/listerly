@@ -7,8 +7,8 @@
 		<link href='http://fonts.googleapis.com/css?family=Pompiere' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
-		You wanted to say hello.
 		<a href="/authenticate/facebook" class="zocial facebook">Sign in with Facebook</a>
-		<a href="#" class="zocial googleplus">Sign in with Google+</a>
+		<a href="/authenticate/twitter" class="zocial twitter">Sign in with Twitter</a>
+		<a href="/authenticate/google" class="zocial google">Sign in with Google</a>
 	</body>
 </html>
