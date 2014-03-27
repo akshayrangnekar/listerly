@@ -11,7 +11,9 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.listerly.config.jersey.JerseyFilter;
+import com.listerly.dao.SpaceDAO;
 import com.listerly.dao.UserDAO;
+import com.listerly.dao.objectify.SpaceDAOImpl;
 import com.listerly.dao.objectify.UserDAOImpl;
 import com.listerly.services.authentication.AuthenticationService;
 import com.listerly.services.authentication.AuthenticationServiceProvider;
@@ -55,6 +57,7 @@ public class ListerlyServletModule extends ServletModule {
 
 	private void bindDAO() {
 		bind(UserDAO.class).to(UserDAOImpl.class);
+		bind(SpaceDAO.class).to(SpaceDAOImpl.class);
 	}
 	
 	private void bindSession() {

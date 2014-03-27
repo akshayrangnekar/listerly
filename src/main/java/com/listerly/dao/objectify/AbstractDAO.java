@@ -7,8 +7,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.appengine.api.datastore.ReadPolicy.Consistency;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Result;
 import com.googlecode.objectify.TxnType;
 import com.listerly.config.objectify.OfyTransactionInterceptor.Transact;
+import com.listerly.entities.IUser;
 
 abstract class AbstractDAO<T> {
 	private static Logger log = Logger.getLogger(AbstractDAO.class.getName());	
@@ -21,7 +24,7 @@ abstract class AbstractDAO<T> {
 	
 	@Transact(TxnType.REQUIRED)
 	public T save(T t) {
-		ofy().save().entity(t);
+		ofy().save().entity(t).now();
 		return t;
 	}
 	
@@ -47,4 +50,9 @@ abstract class AbstractDAO<T> {
 		return user;
 	}
 
+	public T findById(Long id) {
+		Key<T> key = Key.create(cls, id);
+		Result<T> t = ofy().load().key(key);
+		return t.now();
+	}
 }
