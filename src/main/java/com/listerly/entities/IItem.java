@@ -12,6 +12,7 @@ public interface IItem extends BaseEntity{
 
 	public List<? extends FieldValue> getFields();
 
-	public void setFields(List<? extends FieldValue> fields);
+	public void addField(FieldValue in);
+	//public void setFields(List<? extends FieldValue> fields);
 
 }

@@ -1,0 +1,35 @@
+.page-content {
+	background-image:url('white_brick_wall.png');
+	background-color: yellow;
+	overflow-y: scroll;
+	overflow-x: scroll;
+	padding: 0px;
+}
+
+html, body {
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+.main-container-inner {
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+.ace-settings-box div {
+	max-height: none;
+}
+
+.listerly-list {
+	max-width: 350px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	float: left;
+}
+
+.listerly-list .widget-body {
+	overflow: -moz-scrollbars-vertical;
+	overflow-y: scroll;
+}
