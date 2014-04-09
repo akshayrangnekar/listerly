@@ -25,8 +25,6 @@
 		<!-- ace styles -->
 
 		<link rel="stylesheet" href="assets/css/ace.min.css" />
-		<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
-		<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
 
 		<!--[if lte IE 8]>
 		  <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
@@ -53,7 +51,7 @@
 		<div class="navbar navbar-default" id="navbar">
 			<div class="navbar-container" id="navbar-container">
 				<div class="navbar-header pull-left">
-					<a href="#" class="navbar-brand"><small><i class="icon-desktop"></i>&nbsp;Listerly</small></a><!-- /.brand -->
+					<a href="#" class="navbar-brand"><small><img src="logo_vsmall_imgonly.png" class="main-logo" />&nbsp;Listerly</small></a><!-- /.brand -->
 				</div><!-- /.navbar-header -->
 
 				<div class="navbar-header pull-right" role="navigation">
@@ -217,28 +215,17 @@
 						<div class="nav-search" id="nav-search">
 							<form class="form-search">
 								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<input type="text" placeholder="Filter ..." class="nav-search-input" autocomplete="off" />
 									<i class="icon-search nav-search-icon"></i>
 								</span>
 							</form>
 						</div><!-- #nav-search -->
 					</div>
-
 					<div class="page-content">
-						<div class="alert alert-block alert-danger" data-dismiss="alert">
-							<i class="icon-remove red"></i>
-
-							This is a warning type message from 
-							<strong class="red">
-								Listerly
-								<small>(v0.1)</small>
-							</strong>. I presume that this can be as small or as long as possible. If this has a limitation on number of characters it isn't particularly helpful. 
-						</div>
-						<div class="lists">
-							<!-- PAGE CONTENT BEGINS -->
+						<div id="lists">
 								<div class="widget-box listerly-list">
 									
-									<div class="widget-header widget-header-small header-color-grey">
+									<div class="widget-header listerly-list-header widget-header-small header-color-blue">
 										<h6>
 											Small Header & Collapsed
 										</h6>
@@ -254,19 +241,61 @@
 										</div>
 									</div>
 
-									<div class="widget-body">
-										<div class="widget-main">
-											<p class="alert alert-info">
-												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
-											</p>
-										</div>
+									<div class="widget-body list-body dd">
+										<ol class="widget-main dd-list list-main dd-list">
+											<li class="list-item dd-item" data-id="4">
+												<div>
+													<div class="pull-right action-buttons list-item-actions list-item-primary-action">
+														<a class="blue" href="#">
+															<i class="icon-pencil bigger-130"></i>
+														</a>
+													</div>
+													<div class="pull-right action-buttons list-item-actions">
+														<a class="red" href="#">
+															<i class="icon-trash bigger-130"></i>
+														</a>
+														<a class="red" href="#">
+															<i class="icon-trash bigger-130"></i>
+														</a>
+														<a class="red" href="#">
+															<i class="icon-trash bigger-130"></i>
+														</a>
+													</div>
+													<div class="dd-handle">
+													Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+													</div>
+													
+												</div>
+											</li>
+
+											<li class="list-item dd-item item-red2" data-id="5">
+												<div class="dd-handle">
+													Item 5
+												</div>
+
+												<ol class="dd-list">
+													<li class="list-item dd-item item-orange" data-id="6">
+														<div class="dd-handle"> Item 6 </div>
+													</li>
+
+													<li class="list-item dd-item item-red" data-id="7">
+														<div class="dd-handle">Item 7</div>
+													</li>
+
+													<li class="list-item dd-item item-blue2" data-id="8">
+														<div class="dd-handle">Item 8</div>
+													</li>
+												</ol>
+											</li>
+											
+										</ol>
 									</div>
 								</div>
-							
 								<div class="widget-box listerly-list">
-									<div class="widget-header widget-header-small header-color-pink">
+									
+									<div class="widget-header listerly-list-header widget-header-small header-color-blue3">
 										<h6>
-											Second
+											Small Header & Collapsed
 										</h6>
 
 										<div class="widget-toolbar">
@@ -280,18 +309,42 @@
 										</div>
 									</div>
 
-									<div class="widget-body">
-										<div class="widget-main">
-											<p class="alert alert-info">
-												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
-											</p>
-										</div>
+									<div class="widget-body list-body dd">
+										<ol class="widget-main dd-list list-main dd-list">
+											<li class="list-item dd-item" data-id="4">
+												<div class="dd-handle">
+													Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+												</div>
+											</li>
+
+											<li class="list-item dd-item item-red2" data-id="5">
+												<div class="dd-handle">
+													Item 5
+												</div>
+
+												<ol class="dd-list">
+													<li class="list-item dd-item item-orange" data-id="6">
+														<div class="dd-handle"> Item 6 </div>
+													</li>
+
+													<li class="list-item dd-item item-red" data-id="7">
+														<div class="dd-handle">Item 7</div>
+													</li>
+
+													<li class="list-item dd-item item-blue2" data-id="8">
+														<div class="dd-handle">Item 8</div>
+													</li>
+												</ol>
+											</li>
+											
+										</ol>
 									</div>
 								</div>
 								<div class="widget-box listerly-list">
-									<div class="widget-header widget-header-small header-color-blue">
+									
+									<div class="widget-header listerly-list-header widget-header-small header-color-red2">
 										<h6>
-											Third
+											Small Header & Collapsed
 										</h6>
 
 										<div class="widget-toolbar">
@@ -305,16 +358,39 @@
 										</div>
 									</div>
 
-									<div class="widget-body">
-										<div class="widget-main">
-											<p class="alert alert-info">
-												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
-											</p>
-										</div>
+									<div class="widget-body list-body dd">
+										<ol class="widget-main dd-list list-main dd-list">
+											<li class="list-item dd-item" data-id="4">
+												<div class="dd-handle">
+													Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+												</div>
+											</li>
+
+											<li class="list-item dd-item item-red2" data-id="5">
+												<div class="dd-handle">
+													Item 5
+												</div>
+
+												<ol class="dd-list">
+													<li class="list-item dd-item item-orange" data-id="6">
+														<div class="dd-handle"> Item 6 </div>
+													</li>
+
+													<li class="list-item dd-item item-red" data-id="7">
+														<div class="dd-handle">Item 7</div>
+													</li>
+
+													<li class="list-item dd-item item-blue2" data-id="8">
+														<div class="dd-handle">Item 8</div>
+													</li>
+												</ol>
+											</li>
+											
+										</ol>
 									</div>
 								</div>
 								<div class="widget-box listerly-list">
-									<div class="widget-header widget-header-small header-color-red">
+									<div class="widget-header listerly-list-header widget-header-small header-color-blue2">
 										<h6>
 											Fourth
 										</h6>
@@ -339,7 +415,7 @@
 									</div>
 								</div>
 								<div class="widget-box listerly-list">
-									<div class="widget-header widget-header-small header-color-red">
+									<div class="widget-header listerly-list-header widget-header-small header-color-purple">
 										<h6>
 											Fifth
 										</h6>
@@ -364,7 +440,7 @@
 									</div>
 								</div>
 								<div class="widget-box listerly-list">
-									<div class="widget-header widget-header-small header-color-red">
+									<div class="widget-header listerly-list-header widget-header-small header-color-green3">
 										<h6>
 											Sixth
 										</h6>
@@ -387,12 +463,11 @@
 											</p>
 										</div>
 									</div>
-								</div>
-							<!-- PAGE CONTENT ENDS -->
-						</div><!-- /.lists -->
+								</div> 
+						</div>
 					</div><!-- /.page-content -->
 				</div><!-- /.main-content -->
-				<div class="ace-settings-container" id="ace-settings-container">
+				<div class="ace-settings-container" id="settings-container">
 					<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
 						<i class="icon-cogs"></i>
 					</div>
@@ -453,6 +528,7 @@
 		<script src="assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 		<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
 		<script src="assets/js/jquery.slimscroll.min.js"></script>
+		<script src="assets/js/jquery.nestable.min.js"></script>
 
 		<!-- ace scripts -->
 
@@ -464,8 +540,11 @@
 		<script src="listerlyView.js"></script>
 
 		<script type="text/javascript">
-			jQuery(function($) {
-			})
+	
+		jQuery(function($) {
+			listerly.init();
+			$('.dd').nestable({maxDepth: 4, group: 1});
+		})
 			
 		</script>
 	</body>

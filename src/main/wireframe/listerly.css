@@ -1,14 +1,15 @@
-.page-content {
-	background-image:url('white_brick_wall.png');
-	background-color: yellow;
-	overflow-y: scroll;
-	overflow-x: scroll;
-	padding: 0px;
-}
-
 html, body {
 	overflow-y: hidden;
 	overflow-x: hidden;
+
+}
+
+.navbar {
+	background-color: #5897BC;
+}
+
+.main-logo {
+	vertical-align: top;
 }
 
 .main-container-inner {
@@ -16,12 +17,21 @@ html, body {
 	overflow-y: hidden;
 }
 
+.page-content {
+	background-image:url('white_brick_wall.png');
+	background-color: yellow;
+	overflow-y: scroll;
+	overflow-x: scroll;
+	padding: 0px;
+	margin: 0px;
+}
+
 .ace-settings-box div {
 	max-height: none;
 }
 
 .listerly-list {
-	max-width: 350px;
+	width: 350px;
 	margin-left: 10px;
 	margin-right: 10px;
 	margin-top: 10px;
@@ -29,7 +39,43 @@ html, body {
 	float: left;
 }
 
-.listerly-list .widget-body {
+.listerly-list .list-body {
 	overflow: -moz-scrollbars-vertical;
 	overflow-y: scroll;
+	max-width: none;
+}
+
+.listerly-list .list-body .list-main .list-item {
+	margin: 2px 0px 0px 2px;
+	font-weight: normal;
+}
+
+.dd-handle {
+	color: #3a87ad;
+	background-color: #d9edf7;
+}
+
+.listerly-list .list-body .list-main .list-item:last-child {
+	margin-bottom: 5px;
+}
+
+.listerly-list .collapse {
+	display: none;
+}
+
+.verticals .listerly-list .collapse {
+	display: inline;
+}
+
+.verticals .listerly-list {
+	width: 95%;
+}
+
+.list-item-actions {
+	margin: 5px 0;
+	padding: 8px 12px;
+}
+
+.list-item-primary-action {
+	float: left!important;
 }

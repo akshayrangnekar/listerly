@@ -27,17 +27,25 @@ var listerly = (function() {
 	var mContentHeight = 0;
 	var mView = undefined;
 	var log = new ListerlyLog();
-	
-	jQuery(function($) {
-		init();
-	})
+
+	var LayoutEnum = {
+		GRID: 1,
+		LIST: 2
+	}
 	
 	function init() {
-		mView = ListerlyView();
-		mView.init();
+		mView = new ListerlyView();
+		mView.init(LayoutEnum.GRID);
+	}
+	
+	function getView() {
+		return mView;
 	}
 	
 	return {
+		init: init,
 		log: log,
+		LayoutEnum: LayoutEnum,
+		getView: getView
 	}
 })();
