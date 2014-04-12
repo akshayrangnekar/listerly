@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>A Page</title>
-		<link rel="stylesheet" type="text/css" href="/css/zocial/zocial.css" />
+		<link rel="stylesheet" type="text/css" href="/assets/css/zocial/zocial.css" />
 		<link href='http://fonts.googleapis.com/css?family=Pompiere' rel='stylesheet' type='text/css'>
 	</head>
 	<body>

@@ -7,8 +7,10 @@ import com.listerly.entities.impl.objectify.FieldValue;
 public interface IItem extends BaseEntity{
 
 	public Long getSpaceId();
-
 	public void setSpaceId(Long spaceId);
+
+	public Long getParentId();
+	public void setParentId(Long parentId);
 
 	public List<? extends FieldValue> getFields();
 

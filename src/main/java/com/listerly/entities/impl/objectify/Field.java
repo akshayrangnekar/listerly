@@ -1,7 +1,10 @@
 package com.listerly.entities.impl.objectify;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -10,15 +13,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Ignore;
-import com.listerly.entities.IFieldSetting;
+import com.listerly.entities.IFieldOption;
+import com.listerly.entities.IFieldOptions;
+import com.listerly.entities.IField;
+import com.listerly.util.IDGenerator;
 
 @Embed
-public class FieldSetting implements IFieldSetting {
-	private static Logger log = Logger.getLogger(FieldSetting.class.getName());	
+public class Field implements IField {
+	private static Logger log = Logger.getLogger(Field.class.getName());	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 29021641246155143L;
+	private static final String kSettingsField = "__FIELD_SETTINGS";
 
 	protected String uuid;
 	protected String name;
@@ -27,7 +34,8 @@ public class FieldSetting implements IFieldSetting {
 	@Ignore protected Map<String, Object> additionalSettings = new HashMap<String, Object>();
 	protected String serializedSettings;
 	
-	public FieldSetting() {
+	public Field() {
+		setUuid(IDGenerator.str());
 	}
 
 	public String getUuid() {
@@ -61,8 +69,21 @@ public class FieldSetting implements IFieldSetting {
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+	public IFieldOptions getFieldOptions() {
+		FieldOptions fo = null;
+		Object object = this.additionalSettings.get(kSettingsField);
+		if (object instanceof FieldOptions) {
+			fo = (FieldOptions) object;
+		}
+		if (fo == null) {
+			fo = new FieldOptions();
+			this.additionalSettings.put(kSettingsField, fo);
+		}
+		return fo;
+	}
 
-	public Map<String, Object> getAdditionalSettings() {
+	protected Map<String, Object> getAdditionalSettings() {
 		return additionalSettings;
 	}
 
@@ -78,12 +99,24 @@ public class FieldSetting implements IFieldSetting {
 		getAdditionalSettings().put(setting, value);
 	}
 	
-	public void deserializeSettingsMap() {
+	public int getSettingCount() {
+		return getAdditionalSettings().size();
+	}
+	
+	protected void deserializeSettingsMap() {
 		if (this.serializedSettings != null) {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				@SuppressWarnings("unchecked")
 				HashMap<String, Object> map = mapper.readValue(this.serializedSettings, HashMap.class);
+				Object fieldSettingsStr = map.get(kSettingsField);
+				log.fine("Field Options String:" + fieldSettingsStr);
+				if (fieldSettingsStr != null) {
+					@SuppressWarnings("unchecked")
+					ArrayList<FieldOption> afo = mapper.readValue((String)fieldSettingsStr, ArrayList.class);
+					FieldOptions fo = new FieldOptions(afo);
+					map.put(kSettingsField, fo);
+				}
 				setAdditionalSettings(map);
 			} catch (JsonParseException e) {
 				log.warning("Unable to parse string for additional settings.");
@@ -93,11 +126,17 @@ public class FieldSetting implements IFieldSetting {
 		}
 	}
 	
-	public void serializeSettingsMap() {
+	protected void serializeSettingsMap() {
 		if (getAdditionalSettings().size() > 0) {
 			ObjectMapper mapper = new ObjectMapper();
 			try {
-				String valueAsString = mapper.writeValueAsString(getAdditionalSettings());
+				IFieldOptions fieldOptions = getFieldOptions();
+				log.fine("Field Options Size: " + fieldOptions.size());
+				String fieldOptionsStr = mapper.writeValueAsString(fieldOptions);
+				log.fine("Field Options String: " + fieldOptionsStr);
+				Map<String, Object> additionalSettings = getAdditionalSettings();
+				additionalSettings.put(kSettingsField, fieldOptionsStr);
+				String valueAsString = mapper.writeValueAsString(additionalSettings);
 				this.serializedSettings = valueAsString;
 			} catch (JsonProcessingException e) {
 				log.warning("Unable to write string for additional settings.");

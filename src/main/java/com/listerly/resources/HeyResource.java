@@ -2,6 +2,7 @@ package com.listerly.resources;
 
 import static com.listerly.config.objectify.OfyService.ofy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ import org.glassfish.jersey.server.mvc.Template;
 import com.googlecode.objectify.VoidWork;
 import com.listerly.dao.SpaceDAO;
 import com.listerly.dao.UserDAO;
-import com.listerly.entities.IFieldSetting;
+import com.listerly.entities.IField;
 import com.listerly.entities.ISpace;
 import com.listerly.entities.IUser;
 import com.listerly.session.SessionStore;
@@ -77,21 +78,27 @@ public class HeyResource {
 	@Path("/testCreateSpace") public String testCreateSpace() {
 		ISpace space = spaceDAO.create();
 		
-		space.setName("Hello");
-		IFieldSetting field = spaceDAO.createField();
-		field.setListable(true);
-		field.setName("Field1");
-		field.setType("String");
-		space.addFieldSetting(field);
+//		space.setName("Hello");
+//		IField field = spaceDAO.createField();
+//		field.setListable(true);
+//		field.setName("Field1");
+//		field.setType("String");
+//		space.addFieldSetting(field);
 		
-		IFieldSetting field2 = spaceDAO.createField();
-		field2.setListable(false);
-		field2.setName("Field2");
-		field2.setType("BooleanDate");
-		field2.setSetting("Foobar", "McGoober");
-		space.addFieldSetting(field2);
+//		IField field2 = spaceDAO.createField();
+//		field2.setListable(false);
+//		field2.setName("Field2");
+//		field2.setType("BooleanDate");
+//		field2.setSetting("Foobar", "McGoober");
+//		space.addFieldSetting(field2);
 		
-		log.fine("Saving a space with: " + space.getFields().size());
+//		List<String> fieldValues = new ArrayList<String>();
+//		fieldValues.add("URGENT AND IMPORTANT");
+//		fieldValues.add("URGENT");
+//		fieldValues.add("URGENT");
+//		fieldValues.add("URGENT");
+		
+//		log.fine("Saving a space with: " + space.getFields().size());
 		spaceDAO.save(space);
 		
 		return "Created new space: " + space.getId();
@@ -111,7 +118,7 @@ public class HeyResource {
 		ISpace space = spaceDAO.findById(spaceId);
 		builder.append("Space ID: " + space.getId()).append("\n");
 		builder.append("Space name: ").append(space.getName()).append("\n");
-		builder.append("Space fields: ").append(space.getFields().size()).append("\n");
+//		builder.append("Space fields: ").append(space.getFields().size()).append("\n");
 		return builder.toString();
 	}
 

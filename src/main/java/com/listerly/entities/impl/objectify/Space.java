@@ -13,7 +13,7 @@ import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.OnLoad;
 import com.googlecode.objectify.annotation.OnSave;
 import com.googlecode.objectify.annotation.Unindex;
-import com.listerly.entities.IFieldSetting;
+import com.listerly.entities.IField;
 import com.listerly.entities.ISpace;
 
 @Entity
@@ -28,8 +28,9 @@ public class Space implements ISpace {
 	
 	@Id private Long id;
 	private String name;
-	@Unindex private List<FieldSetting> fields = new ArrayList<>();
+	@Unindex private List<Field> fields = new ArrayList<>();
 	@Index @Load List<Ref<Item>> items;
+	private Long parentId;
 
 	public Space() {
 	}
@@ -46,33 +47,65 @@ public class Space implements ISpace {
 		this.name = name;
 	}
 	
-	public List<? extends IFieldSetting> getFields() {
+	public Long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
+
+	public List<? extends IField> getFields() {
 		return fields;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void setFields(List<? extends IFieldSetting> fields) {
-		this.fields = (List<FieldSetting>) fields;
+	protected void setFields(List<? extends IField> fields) {
+		this.fields = (List<Field>) fields;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public void addFieldSetting(IFieldSetting field) {
-		List<FieldSetting> fields = (List<FieldSetting>) getFields();		
-		fields.add((FieldSetting) field);
+	protected void addFieldSetting(IField field) {
+		List<Field> fields = (List<Field>) getFields();		
+		fields.add((Field) field);
+	}
+	@SuppressWarnings("unchecked")
+	protected void addFieldSetting(int index, IField field) {
+		List<Field> fields = (List<Field>) getFields();		
+		fields.add(index, (Field) field);
 	}
 	
 	@OnLoad void onLoadCallback() {
 		log.fine("Calling onLoadCallback()");
-		for (FieldSetting setting : fields) {
+		for (Field setting : fields) {
+			log.fine("Deserializing a field setting.");
 			setting.deserializeSettingsMap();
 		}
 	}
 	
 	@OnSave void onSaveCallback() {
 		log.fine("Calling onSaveCallback()");
-		for (FieldSetting setting : fields) {
+		for (Field setting : fields) {
+			log.fine("Serializing a field setting.");
 			setting.serializeSettingsMap();
 		}
+	}
+
+	@Override
+	public IField createFieldSetting() {
+		log.fine("Creating a new field setting");
+		IField fs = new Field();
+		addFieldSetting(fs);
+		log.fine("Field settings now: " + getFields().size());
+		return fs;
+	}
+
+	@Override
+	public IField createFieldSetting(int index) {
+		log.fine("Creating a new field setting");
+		IField fs = new Field();
+		addFieldSetting(index, fs);
+		log.fine("Field settings now: " + getFields().size());
+		return fs;
 	}
 }

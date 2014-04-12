@@ -1,9 +1,8 @@
 package com.listerly.entities;
 
 import java.io.Serializable;
-import java.util.Map;
 
-public interface IFieldSetting extends Serializable {
+public interface IField extends Serializable {
 	public String getUuid();
 	public void setUuid(String inUid);
 	
@@ -19,5 +18,5 @@ public interface IFieldSetting extends Serializable {
 	public Object getSetting(String inSetting);
 	public void setSetting(String setting, Object value);
 	
-	public Map<String, Object> getAdditionalSettings();
+	public IFieldOptions getFieldOptions();
 }
