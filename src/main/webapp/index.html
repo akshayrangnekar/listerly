@@ -9,12 +9,12 @@
 
 		<!-- basic styles -->
 
-		<link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css" rel="stylesheet" />
 		<link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
-
 		<!--[if IE 7]>
 		  <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css" />
 		<![endif]-->
+
 
 		<!-- page specific plugin styles -->
 
@@ -22,6 +22,10 @@
 
 		<link rel="stylesheet" href="/assets/css/ace-fonts.css" />
 
+	    <link rel="stylesheet" href="/assets/css/listerly-font.css">
+	    <!--if IE 7
+	    link(rel='stylesheet', href='/assets/css/listerly-font-ie7.css')
+	    -->
 		<!-- ace styles -->
 
 		<link rel="stylesheet" href="/assets/css/ace.min.css" />
@@ -59,9 +63,9 @@
 					<ul class="nav ace-nav">
 						<li class="light-blue">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								<img class="nav-user-photo" src="/assets/avatars/avatar.png" alt="user's Photo" />
+								<img class="nav-user-photo" src="/assets/avatars/profile-picture-default.png" />
 								<span class="user-info">
-									<small class="blue2">Welcome,</small>
+									<small class="blue2">Logged in as:</small>
 									User
 								</span>
 
@@ -70,23 +74,23 @@
 
 							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								<li>
-									<a href="#">
+									<a href="#seeings">
 										<i class="icon-cog"></i>
 										Settings
 									</a>
 								</li>
 
 								<li>
-									<a href="#">
+									<a href="#profile">
 										<i class="icon-user"></i>
 										Profile
 									</a>
 								</li>
 
-								<li class="divider"></li>
+								<!-- <li class="divider"></li> -->
 
 								<li>
-									<a href="#">
+									<a href="#logout">
 										<i class="icon-off"></i>
 										Logout
 									</a>
@@ -106,7 +110,7 @@
 				</a>
 
 				<div class="sidebar" id="sidebar">
-					<div class="sidebar-collapse" id="sidebar-collapse">
+					<div class="sidebar-collapse" id="listerly-sidebar-collapse">
 						<i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
 					</div>
 
@@ -121,7 +125,7 @@
 							</button>
 
 							<button class="btn btn-warning">
-								<i class="icon-group"></i>
+								<i class="icon-basket iconl-basket"></i>
 							</button>
 
 							<button class="btn btn-danger">
@@ -150,7 +154,7 @@
 
 						<li class="active open">
 							<a href="#" class="dropdown-toggle">
-								<i class="icon-desktop"></i>
+								<i class="icon-tasks iconl-tasks"></i>
 								<span class="menu-text"> Spaces </span>
 
 								<b class="arrow icon-angle-down"></b>
@@ -158,20 +162,20 @@
 
 							<ul class="submenu">
 								<li>
-									<a href="#">
+									<a href="#/space/1">
 										<i class="icon-desktop"></i>
 										Space #1
 									</a>
 								</li>
 								<li class="active">
-									<a href="#">
+									<a href="#/space/2">
 										<i class="icon-desktop"></i>
 										Space #2
 										<b class="arrow icon-angle-down"></b>
 									</a>
 									<ul class="submenu">
 										<li class="active">
-											<a href="#">
+											<a href="#/space/2a">
 												<i class="icon-desktop"></i>
 												Space
 											</a>
@@ -245,27 +249,14 @@
 									<div class="widget-body list-body dd">
 										<ol class="widget-main dd-list list-main dd-list">
 											<li class="list-item dd-item" data-id="4">
-												<div>
-													<div class="pull-right action-buttons list-item-actions list-item-primary-action">
-														<a class="blue" href="#">
-															<i class="icon-pencil bigger-130"></i>
-														</a>
-													</div>
-													<div class="pull-right action-buttons list-item-actions">
-														<a class="red" href="#">
-															<i class="icon-trash bigger-130"></i>
-														</a>
-														<a class="red" href="#">
-															<i class="icon-trash bigger-130"></i>
-														</a>
-														<a class="red" href="#">
-															<i class="icon-trash bigger-130"></i>
-														</a>
-													</div>
-													<div class="dd-handle">
+												<button data-action="listcheckbox" type="button" data-id="1001">
+													Checkbox
+												</button>
+												<button data-action="listcheckboxchecked" type="button" style="display:none"  data-id="1001">
+													CheckboxChecked
+												</button>
+												<div class="dd-handle">
 													Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
-													</div>
-													
 												</div>
 											</li>
 
@@ -363,7 +354,7 @@
 										<ol class="widget-main dd-list list-main dd-list">
 											<li class="list-item dd-item" data-id="4">
 												<div class="dd-handle">
-													Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+													Lorem sipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
 												</div>
 											</li>
 
@@ -504,7 +495,7 @@
 		<!--[if !IE]> -->
 
 		<script type="text/javascript">
-			window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+			window.jQuery || document.write("<script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js'>"+"<"+"/script>");
 		</script>
 
 		<!-- <![endif]-->
@@ -518,7 +509,7 @@
 		<script type="text/javascript">
 			if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 		</script>
-		<script src="/assets/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
 		<script src="/assets/js/typeahead-bs2.min.js"></script>
 
 		<!-- page specific plugin scripts -->
@@ -527,12 +518,15 @@
 		  <script src="/assets/js/excanvas.min.js"></script>
 		<![endif]-->
 
-		<script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-		<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
-		<script src="/assets/js/jquery.slimscroll.min.js"></script>
-		<script src="/assets/js/jquery.nestable.min.js"></script>
-		<script src="/assets/js/jquery.blockUI.min.js"></script>
-		<script src="/assets/js/jquery.ba-hashchange.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.1/jquery.slimscroll.min.js"></script>
+		<script src="/assets/js/uncompressed/jquery.nestable.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.66.0-2013.10.09/jquery.blockUI.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-browser/0.0.6/jquery.browser.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/v1.3/jquery.ba-hashchange.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+		<script src="/assets/js/jstorage.min.js"></script>
 
 		<!-- ace scripts -->
 
@@ -547,15 +541,14 @@
 	
 		var listerly = new Listerly();
 		jQuery(function($) {
-			$.blockUI(
-				{ 
-					message: $('#loadingMessage'),             
-					css: {
-						top:  ($(window).height() - 100) /2 + 'px', 
-	                	left: ($(window).width() - 100) /2 + 'px', 
-	                	width: '100px' 
-	            	}
-				});
+			$.blockUI({ 
+				message: $('#loadingMessage'),             
+				css: {
+					top:  ($(window).height() - 100) /2 + 'px', 
+                	left: ($(window).width() - 100) /2 + 'px', 
+                	width: '100px' 
+            	}
+			});
 				
 			listerly.init();
 			setTimeout(
@@ -563,7 +556,7 @@
 			  {
 				  $.unblockUI();
 				  // $("#main-container").show();
-			  }, 5000);		
+			  }, 2000);		
 		})
 			
 		</script>

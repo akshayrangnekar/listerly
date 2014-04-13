@@ -12,10 +12,11 @@ html, body {
 }
 
 .navbar {
-	background-color: #307ecc
+	background-color: #307ecc;
 }
 
 .navbar .navbar-brand {
+	height: 40px;
 }
 
 .main-logo {
@@ -29,6 +30,7 @@ html, body {
 
 .page-content {
 	background-image:url('/img/textures/white_brick_wall.png');
+	/*background-color: #f4f6f9;*/
 	overflow-y: scroll;
 	overflow-x: scroll;
 	padding: 0px;
@@ -61,7 +63,7 @@ html, body {
 
 .dd-handle {
 	color: #3a87ad;
-	background-color: #d9edf7;
+	/*background-color: #d9edf7;*/
 	font-weight: normal;
 }
 
@@ -82,10 +84,34 @@ html, body {
 }
 
 .list-item-actions {
-	margin: 5px 0;
+/*	margin: 5px 0;
 	padding: 8px 5px;
-}
+*/}
 
 .list-item-primary-action {
 	float: left!important;
+}
+
+.dd-list .dd-list .dd-handle {
+	font-size: 8pt;
+}
+
+.dd-item > button[data-action="listcheckbox"]{
+	height: 20px;
+}
+
+.dd-item > button[data-action="listcheckbox"]:before {
+    font-family: "listerly-font";
+	content: '\e818';
+	color: red;
+}
+
+.dd-item > button[data-action="listcheckboxchecked"]{
+	height: 20px;
+}
+
+.dd-item > button[data-action="listcheckboxchecked"]:before {
+    font-family: "listerly-font";
+	content: '\e817';
+	color: green;
 }

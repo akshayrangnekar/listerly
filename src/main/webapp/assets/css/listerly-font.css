@@ -1,0 +1,264 @@
+@font-face {
+  font-family: 'listerly-font';
+  src: url('../font/listerly-font.eot?90588694');
+  src: url('../font/listerly-font.eot?90588694#iefix') format('embedded-opentype'),
+       url('../font/listerly-font.woff?90588694') format('woff'),
+       url('../font/listerly-font.ttf?90588694') format('truetype'),
+       url('../font/listerly-font.svg?90588694#listerly-font') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'listerly-font';
+    src: url('../font/listerly-font.svg?90588694#listerly-font') format('svg');
+  }
+}
+*/
+ 
+ [class^="iconl-"]:before, [class*=" iconl-"]:before {
+  font-family: "listerly-font";
+}
+ 
+.iconl-clipboard-list:before { content: '\e81e'; } /* '' */
+.iconl-check-empty:before { content: '\e818'; } /* '' */
+.iconl-conversation:before { content: '\e81c'; } /* '' */
+.iconl-db:before { content: '\e808'; } /* '' */
+.iconl-lightbulb:before { content: '\e81f'; } /* '' */
+.iconl-uniF200:before { content: '\e80a'; } /* '' */
+.iconl-people:before { content: '\e807'; } /* '' */
+.iconl-spin3:before { content: '\e80b'; } /* '' */
+.iconl-spin4:before { content: '\e80c'; } /* '' */
+.iconl-bugtrack:before { content: '\e811'; } /* '' */
+.iconl-tasks-1:before { content: '\e812'; } /* '' */
+.iconl-user:before { content: '\e81a'; } /* '' */
+.iconl-users:before { content: '\e813'; } /* '' */
+.iconl-user-add:before { content: '\e805'; } /* '' */
+.iconl-thumbs-up:before { content: '\e800'; } /* '' */
+.iconl-thumbs-down:before { content: '\e801'; } /* '' */
+.iconl-bell-1:before { content: '\e80f'; } /* '' */
+.iconl-clipboard:before { content: '\e81d'; } /* '' */
+.iconl-docs:before { content: '\e806'; } /* '' */
+.iconl-basket:before { content: '\e809'; } /* '' */
+.iconl-tasks:before { content: '\e804'; } /* '' */
+.iconl-monitor:before { content: '\e803'; } /* '' */
+.iconl-mobile:before { content: '\e802'; } /* '' */
+.iconl-flight:before { content: '\e820'; } /* '' */
+.iconl-credit-card:before { content: '\e821'; } /* '' */
+.iconl-twitter:before { content: '\e815'; } /* '' */
+.iconl-facebook:before { content: '\e814'; } /* '' */
+.iconl-gplus:before { content: '\e816'; } /* '' */
+.iconl-dollar:before { content: '\e80d'; } /* '' */
+.iconl-movie:before { content: '\e80e'; } /* '' */
+.iconl-ok-circled:before { content: '\e810'; } /* '' */
+.iconl-stop-circled:before { content: '\e81b'; } /* '' */
+.iconl-check:before { content: '\e817'; } /* '' */
+.iconl-recruiting:before { content: '\e819'; } /* '' */
+
+/*
+   Animation example, for spinners
+*/
+.listerly-font-spin {
+  -moz-animation: lfspin 2s infinite linear;
+  -o-animation: lfspin 2s infinite linear;
+  -webkit-animation: lfspin 2s infinite linear;
+  animation: lfspin 2s infinite linear;
+  display: inline-block;
+}
+@-moz-keyframes lfspin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes lfspin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-o-keyframes lfspin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-ms-keyframes lfspin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes lfspin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+.listerly-font-rock {
+  -moz-animation: lfrock 0.5s infinite linear;
+  -o-animation: lfrock 0.5s infinite linear;
+  -webkit-animation: lfrock 0.5s infinite linear;
+  animation: lfrock 0.5s infinite linear;
+  display: inline-block;
+}
+@-moz-keyframes lfrock {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  50% {
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  100% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes lfrock {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  50% {
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  100% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+@-o-keyframes lfrock {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  50% {
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  100% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+@-ms-keyframes lfrock {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  50% {
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  100% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+@keyframes lfrock {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  50% {
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  100% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+

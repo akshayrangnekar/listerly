@@ -15,6 +15,7 @@ ListerlyView.prototype.init = function (layoutType) {
 	
 	// Then relayout
 	this.reLayout();
+	$('.dd').nestable({maxDepth: 4, group: 1});
 }
 
 ListerlyView.prototype.loadModelFieldsDUMMY = function() { 
@@ -66,7 +67,6 @@ ListerlyView.prototype.reLayout = function() {
 	this.determineLayout(dimensions);
 	this.sizeMainArea(dimensions);
 	this.resizeListHeights(dimensions);
-	$('.dd').nestable({maxDepth: 4, group: 1});
 }
 
 ListerlyView.prototype.determineLayout = function (dimensions) {
@@ -103,7 +103,7 @@ ListerlyView.prototype.sizeMainArea = function(dimensions) {
 	switch (dimensions.layout){
 	case "VERTICALS":
 		$("#lists").css("width", dimensions["lists-width"]);
-		dimensions.singleListHeight = ((dimensions["lists-height"] - (2 * this.magicNumbers.listContentHeightAllowance)) / 2);
+		//dimensions.singleListHeight = ((dimensions["lists-height"] - (2 * this.magicNumbers.listContentHeightAllowance)) / 2);
 		break;
 	case "GRID":
 		var listWidth = this.magicNumbers.totalListWidth;
@@ -166,18 +166,3 @@ ListerlyView.prototype.calculateDimensions = function (dimensions) {
 		dimensions["lists-width"] = (oW);
 	}
 }
-
-// ListerlyView.prototype.layoutEverything = function () {
-// 	this.resizeMainAreaHeight();
-// 	this.resizeListHeights();
-// }
-
-// ListerlyView.prototype.resizeMainAreaHeight = function () {
-// 	var dimensions = {};
-// 	this.calculateDimensions(dimensions);
-// 	
-// 	this.mContentHeight = dimensions["lists-height"];
-// 	$(".page-content").height(this.mContentHeight);
-// 	$(".lists").height(2000);
-// 	$(".lists").css("min-width", "1400px");
-// }
