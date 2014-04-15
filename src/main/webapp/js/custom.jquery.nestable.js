@@ -44,7 +44,7 @@
             noDragClass     : 'dd-nodrag',
             emptyClass      : 'dd-empty',
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
+            collapseBtnHTML : '<button data-action="collapsel" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
             threshold       : 20
@@ -81,7 +81,7 @@
                 var target = $(e.currentTarget),
                     action = target.data('action'),
                     item   = target.parent(list.options.itemNodeName);
-                if (action === 'collapse') {
+                if (action === 'collapsel') {
                     list.collapseItem(item);
                 }
                 if (action === 'expand') {
@@ -197,7 +197,7 @@
         {
             li.removeClass(this.options.collapsedClass);
             li.children('[data-action="expand"]').hide();
-            li.children('[data-action="collapse"]').show();
+            li.children('[data-action="collapsel"]').show();
             li.children(this.options.listNodeName).show();
         },
 
@@ -206,7 +206,7 @@
             var lists = li.children(this.options.listNodeName);
             if (lists.length) {
                 li.addClass(this.options.collapsedClass);
-                li.children('[data-action="collapse"]').hide();
+                li.children('[data-action="collapsel"]').hide();
                 li.children('[data-action="expand"]').show();
                 li.children(this.options.listNodeName).hide();
             }
@@ -241,7 +241,7 @@
         {
             li.removeClass(this.options.collapsedClass);
             li.children('[data-action="expand"]').remove();
-            li.children('[data-action="collapse"]').remove();
+            li.children('[data-action="collapsel"]').remove();
             li.children(this.options.listNodeName).remove();
         },
 
@@ -252,9 +252,23 @@
                 dragItem = target.closest(this.options.itemNodeName);
 
             this.placeEl.css('height', dragItem.height());
+			
+			if (e.pageX && dragItem.offset()) {
+	            mouse.offsetX = e.pageX - dragItem.offset().left;
+	            mouse.offsetY = e.pageY - dragItem.offset().top;
+			} else {
+	            mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - dragItem.offset().left;
+	            mouse.offsetY = e.offsetY !== undefined ? e.offsetY : e.pageY - dragItem.offset().top;
+			}
 
-            mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
-            mouse.offsetY = e.offsetY !== undefined ? e.offsetY : e.pageY - target.offset().top;
+			// console.log("X0: " + mouse.offsetX);
+			// console.log("Y0: " + mouse.offsetY);
+			// console.log("X1: " + e.offsetX);
+			// console.log("Y1: " + e.offsetY);
+			// console.log("X2: " + (e.pageX - dragItem.offset().left));
+			// console.log("Y2: " + (e.pageY - dragItem.offset().top));
+			// // console.log(e);
+			// console.log(dragItem);
             mouse.startX = mouse.lastX = e.pageX;
             mouse.startY = mouse.lastY = e.pageY;
 

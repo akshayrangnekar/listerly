@@ -65,34 +65,31 @@
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								<img class="nav-user-photo" src="/assets/avatars/profile-picture-default.png" />
 								<span class="user-info">
-									<small class="blue2">Logged in as:</small>
+										<small class="blue2">Not logged in</small>
+<!-- 									<small class="blue2">Logged in as:</small>
 									User
-								</span>
+								 --></span>
 
 								<i class="icon-caret-down"></i>
 							</a>
 
 							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								<li>
-									<a href="#seeings">
-										<i class="icon-cog"></i>
-										Settings
+									<a href="/authenticate/facebook">
+										<i class="icon-foo iconl-facebook"></i>
+										Login with Facebook
 									</a>
 								</li>
-
 								<li>
-									<a href="#profile">
-										<i class="icon-user"></i>
-										Profile
+									<a href="/authenticate/google">
+										<i class="icon-foo iconl-gplus"></i>
+										Login with Google
 									</a>
 								</li>
-
-								<!-- <li class="divider"></li> -->
-
 								<li>
-									<a href="#logout">
-										<i class="icon-off"></i>
-										Logout
+									<a href="/authenticate/twitter">
+										<i class="icon-foo iconl-twitter"></i>
+										Login with Twitter
 									</a>
 								</li>
 							</ul>
@@ -229,34 +226,65 @@
 					<div class="page-content">
 						<div id="lists">
 								<div class="widget-box listerly-list">
-									
 									<div class="widget-header listerly-list-header widget-header-small header-color-blue">
 										<h6>
 											Small Header & Collapsed
 										</h6>
 
 										<div class="widget-toolbar">
-											<a href="#" data-action="settings">
-												<i class="icon-arrow-left"></i>
-											</a>
-
-											<a href="#" data-action="reload">
-												<i class="icon-arrow-right"></i>
+											<a href="#foo">
+												<i class="icon-foo iconl-resize-full"></i>
 											</a>
 										</div>
 									</div>
-
 									<div class="widget-body list-body dd">
 										<ol class="widget-main dd-list list-main dd-list">
 											<li class="list-item dd-item" data-id="4">
-												<button data-action="listcheckbox" type="button" data-id="1001">
+												<button class="item-button" data-action="edititem" type="button" data-id="1001">
+													Edit
+												</button>
+												<button class="item-button" data-action="listcheckbox" type="button" data-id="1001">
 													Checkbox
 												</button>
-												<button data-action="listcheckboxchecked" type="button" style="display:none"  data-id="1001">
+												<button class="item-button" data-action="listcheckboxchecked" type="button" style="display:none"  data-id="1001">
 													CheckboxChecked
 												</button>
-												<div class="dd-handle">
-													Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+												<div class="dd-handle list-item-body">
+													<div>
+														<div class="label label-sm label-warning arrowed">
+															<i class="icon-warning-sign"></i>
+															Warning
+														</div>
+													</div>
+													<div>
+														<div class="label label-sm label-danger arrowed-in">
+															<i class="icon-bolt"></i>
+															Hello
+														</div> 
+													</div>
+													<div>
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+													</div>
+												</div>
+											</li>
+											<li class="list-item dd-item" data-id="5">
+												<button class="item-button" data-action="edititem" type="button" data-id="5">
+													Edit
+												</button>
+												<button class="item-button" data-action="listcheckbox" type="button" data-id="5">
+													Checkbox
+												</button>
+												<button class="item-button" data-action="listcheckboxchecked" type="button" style="display:none"  data-id="5">
+													CheckboxChecked
+												</button>
+												<div class="dd-handle list-item-body">
+													<div class="label label-sm label-warning arrowed">
+														<i class="icon-warning-sign"></i>
+														Warning
+													</div>
+													<div>
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+													</div>
 												</div>
 											</li>
 
@@ -490,6 +518,54 @@
 		</div><!-- /.main-container -->
 
 		<div id="loadingMessage" style="display:none;"><h1><img src="/img/loading/loading2.gif" /></h1></div> 
+		<div id="loggedInDropdown" style="display:none;">
+			<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+				<li>
+					<a href="#seeings">
+						<i class="icon-cog"></i>
+						Settings
+					</a>
+				</li>
+
+				<li>
+					<a href="#profile">
+						<i class="icon-user"></i>
+						Profile
+					</a>
+				</li>
+
+				<!-- <li class="divider"></li> -->
+
+				<li>
+					<a href="#logout">
+						<i class="icon-off"></i>
+						Logout
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div id="loggedOutDropdown" style="display:none;">
+			<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+				<li>
+					<a href="#profile">
+						<i class="iconl-facebook"></i>
+						Login with Facebook
+					</a>
+				</li>
+				<li>
+					<a href="#logout">
+						<i class="iconl-gplus"></i>
+						Login with Google
+					</a>
+				</li>
+				<li>
+					<a href="#seeings">
+						<i class="iconl-twitter"></i>
+						Login with Twitter
+					</a>
+				</li>
+			</ul>
+		</div>
 		<!-- basic scripts -->
 
 		<!--[if !IE]> -->
@@ -521,7 +597,7 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.1/jquery.slimscroll.min.js"></script>
-		<script src="/assets/js/uncompressed/jquery.nestable.js"></script>
+		<script src="/js/custom.jquery.nestable.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.66.0-2013.10.09/jquery.blockUI.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-browser/0.0.6/jquery.browser.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/v1.3/jquery.ba-hashchange.min.js"></script>
@@ -531,7 +607,7 @@
 		<!-- ace scripts -->
 
 		<script src="/assets/js/ace-elements.min.js"></script>
-		<script src="/assets/js/ace.min.js"></script>
+		<script src="/assets/js/uncompressed/ace.js"></script>
 
 		<!-- inline scripts related to this page -->
 		<script src="/js/listerly.js"></script>

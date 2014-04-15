@@ -32,14 +32,14 @@ function Listerly() {
 	}
 	this.actions = {
 		hideArea: function (e) {
-			console.log("Context for hideArea");
-			console.log(this);
-			console.log(e);
+			// console.log("Context for hideArea");
+			// console.log(this);
+			// console.log(e);
 			$('div.page-content').block({ message: $('#loadingMessage')  });
 		},
 		showArea: function () {
-			console.log("Context for showArea");
-			console.log(this);
+			// console.log("Context for showArea");
+			// console.log(this);
 			$('div.page-content').unblock();
 		},
 		listcheckbox: function(action, dataid) {
@@ -62,6 +62,7 @@ Listerly.prototype.init = function() {
 	$('body').on('click', '[data-action]', function() {
 	    var action = $(this).data('action');
 	    var dataid = $(this).data('id');
+		$(this).blur();
 		// console.log(this);
 		// console.log("Action: " + action);
 		// console.log("ID: " + dataid);
@@ -74,7 +75,7 @@ Listerly.prototype.init = function() {
 		alert(location.hash);
 	});
 	
-	location.hash="#/space/1";
+	// location.hash="#/space/1";
 	this.storage = new ListerlyStorage();
 	this.mainView = new ListerlyMainView();
 	this.currentListView = new ListerlyView();
