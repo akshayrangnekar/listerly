@@ -31,7 +31,7 @@ public class GoogleAuthenticationService implements AuthenticationService {
 	    	log.info("Creating a new user.");
 	    	IUser created = userDAO.create();
 	    	created.setEmail(email);
-	    	created.setName(email);
+	    	//created.setName(email);
 	    	created.setGoogleId(email);
 	    	userc = userDAO.save(created);
 	    } else {

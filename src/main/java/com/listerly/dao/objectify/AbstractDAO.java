@@ -11,7 +11,6 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Result;
 import com.googlecode.objectify.TxnType;
 import com.listerly.config.objectify.OfyTransactionInterceptor.Transact;
-import com.listerly.entities.IUser;
 
 abstract class AbstractDAO<T> {
 	private static Logger log = Logger.getLogger(AbstractDAO.class.getName());	

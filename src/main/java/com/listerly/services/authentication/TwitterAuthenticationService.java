@@ -75,15 +75,20 @@ public class TwitterAuthenticationService implements AuthenticationService, Seri
 			node = mapper.readTree(response.getBody());
 		    String id = node.get("id_str").asText();
 		    String name = node.get("name").asText();
+		    String profileImageUrl = node.get("profile_image_url_https").asText();
 		    String email = "@" + node.get("screen_name").asText();
 		    log.fine(String.format("Got back a response with id %s, email: %s, name: %s", id, name, email));
 		    IUser userc = userDAO.findByTwitterId(id);
 		    if (userc == null) {
 		    	log.fine("Creating a new user (twitter).");
 		    	IUser created = userDAO.create();
-		    	created.setEmail(email);
+		    	String[] splitName = name.split(" ");
+		    	if (splitName.length > 0) {
+		    		created.setFirstName(splitName[0]);
+		    		if (splitName.length > 1) created.setLastName(splitName[splitName.length - 1]);
+		    	}
 		    	created.setTwitterId(id);
-		    	created.setName(name);
+		    	created.setProfileImageUrl(profileImageUrl);
 		    	userc = userDAO.save(created);
 		    }
 		    

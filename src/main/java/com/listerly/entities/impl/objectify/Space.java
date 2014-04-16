@@ -1,6 +1,7 @@
 package com.listerly.entities.impl.objectify;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -31,6 +32,7 @@ public class Space implements ISpace {
 	@Unindex private List<Field> fields = new ArrayList<>();
 	@Index @Load List<Ref<Item>> items;
 	private Long parentId;
+	private Date created = new Date();
 
 	public Space() {
 	}
@@ -53,6 +55,10 @@ public class Space implements ISpace {
 
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
+	}
+
+	public Date getCreated() {
+		return created;
 	}
 
 	public List<? extends IField> getFields() {

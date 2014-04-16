@@ -1,5 +1,7 @@
 package com.listerly.entities.impl.objectify;
 
+import java.util.Date;
+
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -18,7 +20,10 @@ public class User implements IUser {
 	@Index private String googleId;
 	@Index private String twitterId;
 	@Index private String email;
-	@Unindex private String name;
+	@Unindex private String firstName;
+	@Unindex private String lastName;
+	@Unindex private Date created = new Date();
+	@Unindex private String profileImageUrl;
 	
 	public User() {
 	}
@@ -51,12 +56,34 @@ public class User implements IUser {
 		this.googleId = googleId;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	@Override
+	public String getProfileImageUrl() {
+		return "/assets/avatars/profile-picture-default.png";
+	}
+
+	@Override
+	public void setProfileImageUrl(String in) {
+		profileImageUrl = in;
 	}
 
 	public String getTwitterId() {

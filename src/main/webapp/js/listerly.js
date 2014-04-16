@@ -1,3 +1,8 @@
+function show_box(id) {
+	jQuery('.widget-box.visible').removeClass('visible');
+	jQuery('#'+id).addClass('visible');
+}
+
 function ListerlyLog(enableLogging) {
 	this.loggingEnabled = enableLogging;
 	this.logMethods = {};
@@ -46,12 +51,12 @@ function Listerly() {
 			// console.log(this);
 			// console.log(action);
 			// console.log(dataid);
-			console.log($( "[data-action='listcheckbox'][data-id='" + dataid +"']" ));
+			// console.log($( "[data-action='listcheckbox'][data-id='" + dataid +"']" ));
 			$( "[data-action='listcheckbox'][data-id='" + dataid +"']" ).hide();
 			$( "[data-action='listcheckboxchecked'][data-id='" + dataid +"']" ).show();
 		},
 		listcheckboxchecked: function(action, dataid) {
-			console.log($( "[data-action='listcheckboxchecked'][data-id='" + dataid +"']" ));
+			// console.log($( "[data-action='listcheckboxchecked'][data-id='" + dataid +"']" ));
 			$( "[data-action='listcheckboxchecked'][data-id='" + dataid +"']" ).hide();
 			$( "[data-action='listcheckbox'][data-id='" + dataid +"']" ).show();
 		}
@@ -59,13 +64,88 @@ function Listerly() {
 }
 	
 Listerly.prototype.init = function() {
+	this.blockMainScreen();
+	
+	this.storage = new ListerlyStorage();
+	this.mainView = new ListerlyMainView();
+	
+	this.setupListeners();
+
+	// Check login state and set up login pane
+	this.checkLoginState();
+	
+	// See if we should preload a space
+	
+	this.currentListView = new ListerlyView();
+	this.currentListView.init(this.LayoutEnum.LIST);
+
+}
+
+Listerly.prototype.checkLoginState = function() {
+	this.startLoadingResource();
+	$.ajax({
+		dataType: "json",
+		url: "/authenticate/state",
+		data: {},
+		async: true,
+		cache: false,
+		context: this,
+		success: function(data, textStatus, jqXHR) {
+			console.log("Login status: " + textStatus);
+			this.finishedLoadingResource();
+			this.finishedLoadingUser(data);
+		}
+	});
+}
+
+Listerly.prototype.blockMainScreen = function() {
+	$.blockUI({ 
+		message: $('#loadingMessage'),             
+		css: {
+			top:  ($(window).height() - 100) /2 + 'px', 
+        	left: ($(window).width() - 100) /2 + 'px', 
+        	width: '100px' 
+    	}
+	});
+}
+
+Listerly.prototype.finishedLoadingUser = function(user) {
+	this.user = user;
+	this.mainView.setUser(user);
+}
+
+
+Listerly.prototype.setLoadingResourceCount = function(count) {
+	this.loadingCount = count;
+}
+
+Listerly.prototype.startLoadingResource = function() {
+	var count = this.loadingCount;
+	if (count == undefined) {
+		count = 0;
+	}
+	count++;
+	this.loadingCount = count;
+}
+
+Listerly.prototype.finishedLoadingResource = function() {
+	var count = this.loadingCount;
+	count--;
+	if (count == 0) {
+		this.completedLoading();
+	}
+	this.loadingCount = count;
+}
+
+Listerly.prototype.completedLoading = function() {
+	this.unblockMainScreen();
+}
+
+Listerly.prototype.setupListeners = function() {
 	$('body').on('click', '[data-action]', function() {
 	    var action = $(this).data('action');
 	    var dataid = $(this).data('id');
 		$(this).blur();
-		// console.log(this);
-		// console.log("Action: " + action);
-		// console.log("ID: " + dataid);
 	    if (action in listerly.actions) {
 	        listerly.actions[action].apply(this, [action, dataid]);
 	    }
@@ -74,12 +154,10 @@ Listerly.prototype.init = function() {
 	$(window).on('hashchange', function() {
 		alert(location.hash);
 	});
-	
-	// location.hash="#/space/1";
-	this.storage = new ListerlyStorage();
-	this.mainView = new ListerlyMainView();
-	this.currentListView = new ListerlyView();
-	this.currentListView.init(this.LayoutEnum.GRID);
+}
+
+Listerly.prototype.unblockMainScreen = function() {
+    $.unblockUI();
 }
 	
 Listerly.prototype.getView = function() {
@@ -98,7 +176,6 @@ function ListerlyMainView() {
 	} else {
 		this.sidebar_collapsed(false);
 	}
-	
 }
 
 ListerlyMainView.prototype.sidebar_collapsed = function(collpase) {
@@ -124,7 +201,20 @@ ListerlyMainView.prototype.sidebar_collapsed = function(collpase) {
 		ace.settings.unset('sidebar', 'collapsed');
 		listerly.storage.set('sidebar','expanded');
 	}
+}
 
+ListerlyMainView.prototype.setUser = function(user) {
+	if (user) {
+		$(".nav .header-user .user-menu").remove();
+		var foo = $("#loggedInDropdown").html();
+		$(".nav .header-user").append(foo);
+		$(".user-info").html('<small class="blue2">Logged in as:</small>' + user.firstName);
+	} else {
+		$(".nav .header-user .user-menu").remove();
+		var foo = $("#loggedOutDropdown").html();
+		$(".nav .header-user").append(foo);
+		$(".user-info").html('<small class="blue2">Not logged in</small>');
+	}
 }
 
 function ListerlyStorage() {

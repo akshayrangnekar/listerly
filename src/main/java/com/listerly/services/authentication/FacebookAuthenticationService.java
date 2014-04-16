@@ -69,18 +69,24 @@ public class FacebookAuthenticationService implements AuthenticationService {
 	    ObjectMapper mapper = new ObjectMapper();
 	    JsonNode node;
 		try {
-			node = mapper.readTree(response.getBody());
+			String body = response.getBody();
+			node = mapper.readTree(body);
 		    String id = node.get("id").asText();
 		    String name = node.get("name").asText();
+		    String firstName = node.get("first_name").asText();
+		    String lastName = node.get("last_name").asText();
 		    String email = node.get("email").asText();
-		    log.info(String.format("Got back a response with id %s, email: %s, name: %s", id, name, email));
+		    log.info(String.format("Got back a response with id %s, email: %s, name: %s, first: %s, last: %s", 
+		    		id, name, email, firstName, lastName));
+		    //log.info("Full Body: " + body);
 		    IUser userc = userDAO.findByFacebookId(id);
 		    if (userc == null) {
 		    	log.info("Creating a new user.");
 		    	IUser created = userDAO.create();
 		    	created.setEmail(email);
 		    	created.setFacebookId(id);
-		    	created.setName(name);
+		    	created.setFirstName(firstName);
+		    	created.setLastName(lastName);
 		    	userc = userDAO.save(created);
 		    }
 		    

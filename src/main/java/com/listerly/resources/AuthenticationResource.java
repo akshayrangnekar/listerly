@@ -1,6 +1,7 @@
 package com.listerly.resources;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -8,13 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.listerly.apiobj.user.AUser;
 import com.listerly.entities.IUser;
 import com.listerly.services.authentication.AuthenticationServiceProvider;
 import com.listerly.session.SessionStore;
@@ -25,6 +29,25 @@ public class AuthenticationResource {
 
 	@Inject AuthenticationServiceProvider authServiceProvider;
 	@Inject SessionStore session;
+
+	@GET
+	@Path("logout")
+	public Response logout() {
+		try {
+			session.put("user", null);
+			return Response.seeOther(new URI("/")).build();
+		} catch (URISyntaxException e) {
+			return Response.ok().build();
+		}
+	}
+	
+	@GET
+	@Path("state")
+	@Produces(MediaType.APPLICATION_JSON)
+	public AUser getLoggedInUser() {
+		Object object = session.get("user");
+		return (AUser) object;
+	}
 	
 	@GET
 	@Path("facebook") 
@@ -79,17 +102,18 @@ public class AuthenticationResource {
 	}
 	
 	private Response OAuthenticationCallback(String code, HttpServletRequest req, String serviceName) {
-		IUser user = authServiceProvider.getAuthenticatedUser(serviceName, code);
-		if (user == null) {
-			log.info("Did not succeed with " + serviceName + " authentication.");
+		IUser pUser = authServiceProvider.getAuthenticatedUser(serviceName, code);
+		if (pUser == null) {
+			log.fine("Did not succeed with " + serviceName + " authentication.");
 		} else {
-			log.info("Succeeded with " + serviceName + " authentication.");
-			log.info("Putting data into session: " + session);
+			log.fine("Succeeded with " + serviceName + " authentication.");
+			log.fine("Putting data into session: " + session);
 //			session.setUser(user);
 //			session.setMessage("Yo what's up dawg: " + serviceName);
 			session.put("message", "Log in successful");
-			session.put("user", user.getEmail());
-			log.info("Put user: " + user.getId());
+			AUser aUser = new AUser(pUser);
+			session.put("user", aUser);
+			log.fine("Put user: " + aUser.getId());
 		}
 		Object attribute = session.get("referer");//req.getSession().getAttribute("referer");
 		log.info("Finished " + serviceName + " authentication. Sending back to " + attribute.toString());

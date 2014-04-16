@@ -19,6 +19,7 @@ import com.listerly.services.authentication.AuthenticationService;
 import com.listerly.services.authentication.AuthenticationServiceProvider;
 import com.listerly.services.authentication.FacebookAuthenticationService;
 import com.listerly.services.authentication.GoogleAuthenticationService;
+import com.listerly.services.authentication.GooglePlusAuthenticationService;
 import com.listerly.services.authentication.TwitterAuthenticationService;
 import com.listerly.session.ISession;
 import com.listerly.session.SessionStore;
@@ -53,6 +54,7 @@ public class ListerlyServletModule extends ServletModule {
 	    bind(AuthenticationService.class).annotatedWith(Names.named("Facebook")).to(FacebookAuthenticationService.class);
 	    bind(AuthenticationService.class).annotatedWith(Names.named("Twitter")).to(TwitterAuthenticationService.class);
 	    bind(AuthenticationService.class).annotatedWith(Names.named("Google")).to(GoogleAuthenticationService.class);
+	    bind(AuthenticationService.class).annotatedWith(Names.named("GooglePlus")).to(GooglePlusAuthenticationService.class);
 	}
 
 	private void bindDAO() {

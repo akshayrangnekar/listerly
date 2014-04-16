@@ -1,5 +1,6 @@
 package com.listerly.entities;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -12,4 +13,6 @@ public interface ISpace extends BaseEntity {
 //	public void addFieldSetting(IFieldSetting field);
 	public IField createFieldSetting();
 	public IField createFieldSetting(int index);
+	
+	public Date getCreated();
 }

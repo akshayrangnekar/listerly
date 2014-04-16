@@ -15,10 +15,11 @@ public class AuthenticationServiceProvider {
 	@Inject
 	public AuthenticationServiceProvider(@Named("Facebook") AuthenticationService fbService,
 			@Named("Twitter") AuthenticationService twitService,
-			@Named("Google") AuthenticationService googleService) {
+			@Named("Google") AuthenticationService googleService, @Named("GooglePlus") AuthenticationService googlePlusService) {
 		services = new HashMap<String, AuthenticationService>();
 		services.put("Facebook", fbService);
 		services.put("Twitter", twitService);
+		services.put("GooglePlus", googlePlusService);
 		services.put("Google", googleService);
 	}
 	
