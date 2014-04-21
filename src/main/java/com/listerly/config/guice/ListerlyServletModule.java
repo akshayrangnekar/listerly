@@ -7,9 +7,12 @@ import javax.inject.Singleton;
 
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFilter;
+import com.listerly.apiobj.user.AUser;
+import com.listerly.config.guice.MethodWrapperExampleImpl.ExampleAOPAnnotation;
 import com.listerly.config.jersey.JerseyFilter;
 import com.listerly.dao.SpaceDAO;
 import com.listerly.dao.UserDAO;
@@ -51,6 +54,7 @@ public class ListerlyServletModule extends ServletModule {
 	
 	private void bindAuthentication() {
 	    bind(AuthenticationServiceProvider.class);
+	    bindInterceptor(Matchers.any(), Matchers.annotatedWith(ExampleAOPAnnotation.class), new MethodWrapperExampleImpl());
 	    bind(AuthenticationService.class).annotatedWith(Names.named("Facebook")).to(FacebookAuthenticationService.class);
 	    bind(AuthenticationService.class).annotatedWith(Names.named("Twitter")).to(TwitterAuthenticationService.class);
 	    bind(AuthenticationService.class).annotatedWith(Names.named("Google")).to(GoogleAuthenticationService.class);
@@ -64,6 +68,7 @@ public class ListerlyServletModule extends ServletModule {
 	
 	private void bindSession() {
 		bind(ISession.class).to(SessionStore.class);
+		bind(AUser.class).toProvider(UserProvider.class);
 	}
 
 	protected void bindFiltersAndServlets() {

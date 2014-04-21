@@ -209,3 +209,26 @@ html, body {
 .list-item > button:hover {
   color: #707070;
 }
+
+.modal-header {
+	background-color: #eff3f8;
+}
+
+.form-actions {
+	margin-left: -20px;
+	margin-right: -20px;
+	margin-bottom: -20px;
+}
+
+.form-field-email-note {
+	margin-top: -10px;
+}
+
+ul.parsley-errors-list { padding-left:20px; list-style:none; display:inline;}
+ul.parsley-errors-list li { margin-bottom:10px; color: red;}
+ul.parsley-errors-list li:before {    
+    font-family: 'FontAwesome';
+    content: '\f06a';
+	color: red;
+    margin:0 5px 0 -15px;
+}

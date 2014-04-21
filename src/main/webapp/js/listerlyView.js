@@ -1,5 +1,155 @@
 var kLV_MIN_LAYOUT_WIDTH = 640;
 
+function ListerlyMainView() {
+	$('#listerly-sidebar-collapse').on(ace.click_event, function(){
+		$minimized = $('#sidebar').hasClass('menu-min');
+		listerly.mainView.sidebar_collapsed(!$minimized);//@ ace-extra.js
+		listerly.currentListView.reLayout();
+	});
+	this.savedSidebarState();
+	this.formMappings = {
+		userprofile: 
+			{
+				modal: "#userProfileModal", 
+			  	fields: [
+					{name: "id", type: "hidden"}, 
+			 		{name: "firstName", type: "text"}, 
+			 		{name: "lastName", type: "text"}, 
+					{name: "email", type: "email"}
+				]
+			}, 
+	}
+}
+
+ListerlyMainView.prototype.blockMainScreen = function() {
+	$.blockUI({ 
+		message: $('#loadingMessage'),             
+		css: {
+			top:  ($(window).height() - 100) /2 + 'px', 
+        	left: ($(window).width() - 100) /2 + 'px', 
+        	width: '100px' 
+    	}
+	});
+}
+
+ListerlyMainView.prototype.unblockMainScreen = function() {
+    $.unblockUI();
+}
+
+ListerlyMainView.prototype.savedSidebarState = function() {
+	var sidebar = listerly.storage.get('sidebar');
+	if (sidebar == 'collapsed') {
+		this.sidebar_collapsed(true);
+	} else {
+		this.sidebar_collapsed(false);
+	}
+}
+
+ListerlyMainView.prototype.sidebar_collapsed = function(collpase) {
+	collpase = collpase || false;
+
+	var sidebar = document.getElementById('sidebar');
+	var icon = document.getElementById('listerly-sidebar-collapse').querySelector('[class*="icon-"]');
+	var $icon1 = icon.getAttribute('data-icon1');//the icon for expanded state
+	var $icon2 = icon.getAttribute('data-icon2');//the icon for collapsed state
+
+	if(collpase) {
+		ace.addClass(sidebar , 'menu-min');
+		ace.removeClass(icon , $icon1);
+		ace.addClass(icon , $icon2);
+
+		ace.settings.set('sidebar', 'collapsed');
+		listerly.storage.set('sidebar','collapsed');
+	} else {
+		ace.removeClass(sidebar , 'menu-min');
+		ace.removeClass(icon , $icon2);
+		ace.addClass(icon , $icon1);
+
+		ace.settings.unset('sidebar', 'collapsed');
+		listerly.storage.set('sidebar','expanded');
+	}
+}
+
+ListerlyMainView.prototype.setUser = function(user) {
+	if (user) {
+		$(".nav .header-user .user-menu").remove();
+		var foo = $("#loggedInDropdown").html();
+		$(".nav .header-user").append(foo);
+		$(".user-info").html('<small class="blue2">Logged in as:</small>' + user.firstName);
+	} else {
+		$(".nav .header-user .user-menu").remove();
+		var foo = $("#loggedOutDropdown").html();
+		$(".nav .header-user").append(foo);
+		$(".user-info").html('<small class="blue2">Not logged in</small>');
+	}
+}
+
+ListerlyMainView.prototype.showForm = function(key, item) {
+	var formMapping = this.formMappings[key];
+	if (formMapping) {
+		if (formMapping.modal) {
+			var theForm = $(formMapping.modal);
+			var fields = formMapping.fields;
+			for (fieldIdx in fields) {
+				var field = (fields[fieldIdx]);
+				var formField = theForm.find("#form-field-" + field.name);
+				formField.val(item[field.name]);
+			}
+			theForm.modal();
+		} else {
+			listerly.log("Lookie here. May be creating a form!");
+		}
+	} else {
+		listerly.log("Unable to find mapping for form: " + key);
+	}
+}
+
+ListerlyMainView.prototype.validateForm = function(key) {
+	var formMapping = this.formMappings[key];
+	var item = {};
+	if (formMapping) {
+		if (formMapping.modal) {
+			var theFormModal = $(formMapping.modal);
+			var theForm = theFormModal.find("form");
+			var par = theForm.parsley();
+			console.log("Parsley: ");
+			console.log(par);
+			var r = par.validate();
+			console.log("Valid: " + r);
+			return r;
+		}
+	}
+}
+
+ListerlyMainView.prototype.getFormValues = function(key) {
+	var formMapping = this.formMappings[key];
+	var item = {};
+	if (formMapping) {
+		if (formMapping.modal) {
+			var theForm = $(formMapping.modal);
+			var fields = formMapping.fields;
+			for (fieldIdx in fields) {
+				var field = (fields[fieldIdx]);
+				var formField = theForm.find("#form-field-" + field.name);
+				item[field.name] = formField.val();
+			}
+			return item;
+		} else {
+			listerly.log("Where's my form?");
+		}
+	} else {
+		listerly.log("Unable to find mapping for form: " + key);
+	}
+}
+
+ListerlyMainView.prototype.hideForm = function(key) {
+	var formMapping = this.formMappings[key];
+	if (formMapping && formMapping.modal) {
+		var theForm = $(formMapping.modal);
+		theForm.modal('hide');
+	}
+}
+
 function ListerlyView() {
 };
 
@@ -32,7 +182,7 @@ ListerlyView.prototype.calculateStyleMagicNumbers = function() {
 	var numL = magicNumbers.numberOfLists;
 
 	if (numL == 0) {
-		listerly.log.log("There are no lists.");
+		listerly.log("There are no lists.");
 	} else {
 		var elem = $(".listerly-list");
 		magicNumbers.listMarginTop = parseInt(elem.css("margin-top"));
@@ -155,7 +305,7 @@ ListerlyView.prototype.calculateDimensions = function (dimensions) {
 	var headerH = $(".navbar").height(); 
 	var topBarH = $("#breadcrumbs").height();
 	var myH  = (oH - (headerH + topBarH));
-	listerly.log.log("myH: " + myH);
+	listerly.log("myH: " + myH);
 	dimensions["lists-height"] = myH;
 
 	var oW = $(window).innerWidth();
@@ -166,3 +316,4 @@ ListerlyView.prototype.calculateDimensions = function (dimensions) {
 		dimensions["lists-width"] = (oW);
 	}
 }
+

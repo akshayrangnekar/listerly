@@ -19,6 +19,9 @@ import javax.ws.rs.core.UriBuilder;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.listerly.apiobj.user.AUser;
+import com.listerly.config.guice.UserProvider;
+import com.listerly.config.jersey.UserRequiredFilter.UserOptional;
+import com.listerly.dao.UserDAO;
 import com.listerly.entities.IUser;
 import com.listerly.services.authentication.AuthenticationServiceProvider;
 import com.listerly.session.SessionStore;
@@ -29,7 +32,9 @@ public class AuthenticationResource {
 
 	@Inject AuthenticationServiceProvider authServiceProvider;
 	@Inject SessionStore session;
-
+	@Inject UserDAO userDAO;
+	@Inject UserProvider userProvider;
+	
 	@GET
 	@Path("logout")
 	public Response logout() {
@@ -44,9 +49,12 @@ public class AuthenticationResource {
 	@GET
 	@Path("state")
 	@Produces(MediaType.APPLICATION_JSON)
+	@UserOptional
 	public AUser getLoggedInUser() {
-		Object object = session.get("user");
-		return (AUser) object;
+		AUser user = (AUser) userProvider.get();
+		if (user != null && user.isLoggedIn()) return user;
+		return null;
+		
 	}
 	
 	@GET
@@ -103,6 +111,7 @@ public class AuthenticationResource {
 	
 	private Response OAuthenticationCallback(String code, HttpServletRequest req, String serviceName) {
 		IUser pUser = authServiceProvider.getAuthenticatedUser(serviceName, code);
+		String loginToken = null;
 		if (pUser == null) {
 			log.fine("Did not succeed with " + serviceName + " authentication.");
 		} else {
@@ -110,15 +119,21 @@ public class AuthenticationResource {
 			log.fine("Putting data into session: " + session);
 //			session.setUser(user);
 //			session.setMessage("Yo what's up dawg: " + serviceName);
+			
 			session.put("message", "Log in successful");
 			AUser aUser = new AUser(pUser);
 			session.put("user", aUser);
+			session.put("userid", pUser.getId());
 			log.fine("Put user: " + aUser.getId());
+			
+			loginToken = userDAO.createLoginToken(pUser);
+			session.put("token", loginToken);
 		}
 		Object attribute = session.get("referer");//req.getSession().getAttribute("referer");
 		log.info("Finished " + serviceName + " authentication. Sending back to " + attribute.toString());
 		URI uri = UriBuilder.fromUri(attribute.toString()).build();
-		Response resp = Response.seeOther(uri).build();
+		Response resp = null;
+		resp = Response.seeOther(uri).build();
 		return resp;
 	}
 

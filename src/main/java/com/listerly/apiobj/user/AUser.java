@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.listerly.entities.IUser;
 
-public class AUser extends AbstractApiObject<IUser> implements Serializable {
+public class AUser extends AbstractApiObject<IUser> implements Serializable, IAUser {
 	/**
 	 * 
 	 */
@@ -15,9 +15,22 @@ public class AUser extends AbstractApiObject<IUser> implements Serializable {
 	private String lastName;
 	private String email;
 	private String profileImageUrl;
+	private boolean profileComplete;
+	private boolean isLoggedIn;
 	
 	public AUser(IUser persistent) {
 		super(persistent);
+		
+		isLoggedIn = true;
+		if (firstName != null && lastName != null && email != null) {
+			setProfileComplete(true);
+		} else {
+			setProfileComplete(false);
+		}
+	}
+	
+	public AUser() {
+		isLoggedIn = false;
 	}
 
 	public Long getId() {
@@ -58,6 +71,22 @@ public class AUser extends AbstractApiObject<IUser> implements Serializable {
 
 	public void setProfileImageUrl(String profileImageUrl) {
 		this.profileImageUrl = profileImageUrl;
+	}
+
+	public boolean isProfileComplete() {
+		return profileComplete;
+	}
+
+	public void setProfileComplete(boolean profileComplete) {
+		this.profileComplete = profileComplete;
+	}
+
+	public boolean isLoggedIn() {
+		return isLoggedIn;
+	}
+
+	public void setLoggedIn(boolean isLoggedIn) {
+		this.isLoggedIn = isLoggedIn;
 	}
 
 

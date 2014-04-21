@@ -1,36 +1,24 @@
-function show_box(id) {
-	jQuery('.widget-box.visible').removeClass('visible');
-	jQuery('#'+id).addClass('visible');
-}
+var gEnableLogging = true;
+var gLogMethods = {"*": true};
 
-function ListerlyLog(enableLogging) {
-	this.loggingEnabled = enableLogging;
-	this.logMethods = {};
-}
-
-ListerlyLog.prototype.log = function(message) {
-	if (this.loggingEnabled) {
-		if (arguments && arguments.callee && arguments.callee.caller) {
-			if (this.logMethods["*"] || this.logMethods[arguments.callee.caller.name]) {
-				console.log(message);
+function listerly_fixFunctionNames(inproto) {
+	for (x in inproto) {
+		if (listerly_isFunction(inproto[x])) {
+			if (!inproto[x].name) {
+				inproto[x].name = inproto.constructor.name + "__" + x;
 			}
-		} else {
-			console.log(message);
 		}
 	}
-};
+}
 
-ListerlyLog.prototype.enableLogging = function(method) {
-	if (typeof(method)==='undefined') {
-		this.loggingEnabled = true;
-	} else {
-		this.logMethods[method] = true;
-	}
+function listerly_isFunction(obj) {
+  return !!(obj && obj.constructor && obj.call && obj.apply);
 }
 
 function Listerly() {
+	this.loggingEnabled = gEnableLogging;
+	this.logMethods = gLogMethods;
 	this.currentListView = undefined;
-	this.log = new ListerlyLog();
 	this.LayoutEnum = {
 		GRID: 1,
 		LIST: 2
@@ -59,26 +47,51 @@ function Listerly() {
 			// console.log($( "[data-action='listcheckboxchecked'][data-id='" + dataid +"']" ));
 			$( "[data-action='listcheckboxchecked'][data-id='" + dataid +"']" ).hide();
 			$( "[data-action='listcheckbox'][data-id='" + dataid +"']" ).show();
+		},
+		userprofilesave: function(action, dataid) {
+			listerly.saveUserProfile();
 		}
 	};
 }
 	
 Listerly.prototype.init = function() {
-	this.blockMainScreen();
 	
 	this.storage = new ListerlyStorage();
 	this.mainView = new ListerlyMainView();
 	
+	this.mainView.blockMainScreen();
 	this.setupListeners();
 
 	// Check login state and set up login pane
 	this.checkLoginState();
 	
 	// See if we should preload a space
-	
 	this.currentListView = new ListerlyView();
 	this.currentListView.init(this.LayoutEnum.LIST);
 
+}
+
+Listerly.prototype.log = function(message) {
+	if (this.loggingEnabled) {
+		if (arguments && arguments.callee && arguments.callee.caller) {
+			var methodName = arguments.callee.caller.name;
+			console.log("Method name: "+ methodName);
+			if (this.logMethods["*"] || this.logMethods[methodName]) {
+				if (methodName) console.log(methodName + ":" + message);
+				else console.log(message);
+			}
+		} else {
+			console.log(message);
+		}
+	}
+};
+
+Listerly.prototype.enableLogging = function(method) {
+	if (typeof(method)==='undefined') {
+		this.loggingEnabled = true;
+	} else {
+		this.logMethods[method] = true;
+	}
 }
 
 Listerly.prototype.checkLoginState = function() {
@@ -91,29 +104,50 @@ Listerly.prototype.checkLoginState = function() {
 		cache: false,
 		context: this,
 		success: function(data, textStatus, jqXHR) {
-			console.log("Login status: " + textStatus);
+			this.log("Login status: " + textStatus);
 			this.finishedLoadingResource();
 			this.finishedLoadingUser(data);
 		}
 	});
 }
 
-Listerly.prototype.blockMainScreen = function() {
-	$.blockUI({ 
-		message: $('#loadingMessage'),             
-		css: {
-			top:  ($(window).height() - 100) /2 + 'px', 
-        	left: ($(window).width() - 100) /2 + 'px', 
-        	width: '100px' 
-    	}
-	});
-}
-
 Listerly.prototype.finishedLoadingUser = function(user) {
 	this.user = user;
 	this.mainView.setUser(user);
+	if (user && !user.profileComplete) {
+		this.log("Showing profile modal");
+		// $("#loginModal").modal();
+		this.mainView.showForm("userprofile", user);
+	} else {
+		this.log("Not Showing profile modal");
+	}
 }
 
+Listerly.prototype.saveUserProfile = function() {
+	var isValid = listerly.mainView.validateForm("userprofile");
+	if (isValid) {
+		var editedUser = listerly.mainView.getFormValues("userprofile");
+		if (this.didObjectChange(editedUser, this.user)) {
+			this.log("Object did change.");
+		} else {
+			this.log("Object didn't change.");
+		}
+		listerly.mainView.hideForm("userprofile");
+		console.log(editedUser);
+	} else {
+		console.log("Nope, not valid");
+	}
+}
+
+Listerly.prototype.didObjectChange = function(newObject, originalObject) {
+	var changed = false;
+	for (var key in newObject) {
+	  if (newObject.hasOwnProperty(key)) {
+		  if (newObject[key] != originalObject[key]) changed=true;
+	  }
+	}
+	return changed;
+}
 
 Listerly.prototype.setLoadingResourceCount = function(count) {
 	this.loadingCount = count;
@@ -138,7 +172,7 @@ Listerly.prototype.finishedLoadingResource = function() {
 }
 
 Listerly.prototype.completedLoading = function() {
-	this.unblockMainScreen();
+	this.mainView.unblockMainScreen();
 }
 
 Listerly.prototype.setupListeners = function() {
@@ -153,68 +187,12 @@ Listerly.prototype.setupListeners = function() {
 	
 	$(window).on('hashchange', function() {
 		alert(location.hash);
+		this.log("Location: " + location.hash);
 	});
-}
-
-Listerly.prototype.unblockMainScreen = function() {
-    $.unblockUI();
 }
 	
 Listerly.prototype.getView = function() {
 	return this.currentListView;
-}
-
-function ListerlyMainView() {
-	$('#listerly-sidebar-collapse').on(ace.click_event, function(){
-		$minimized = $('#sidebar').hasClass('menu-min');
-		listerly.mainView.sidebar_collapsed(!$minimized);//@ ace-extra.js
-		listerly.currentListView.reLayout();
-	});
-	var sidebar = listerly.storage.get('sidebar');
-	if (sidebar == 'collapsed') {
-		this.sidebar_collapsed(true);
-	} else {
-		this.sidebar_collapsed(false);
-	}
-}
-
-ListerlyMainView.prototype.sidebar_collapsed = function(collpase) {
-	collpase = collpase || false;
-
-	var sidebar = document.getElementById('sidebar');
-	var icon = document.getElementById('listerly-sidebar-collapse').querySelector('[class*="icon-"]');
-	var $icon1 = icon.getAttribute('data-icon1');//the icon for expanded state
-	var $icon2 = icon.getAttribute('data-icon2');//the icon for collapsed state
-
-	if(collpase) {
-		ace.addClass(sidebar , 'menu-min');
-		ace.removeClass(icon , $icon1);
-		ace.addClass(icon , $icon2);
-
-		ace.settings.set('sidebar', 'collapsed');
-		listerly.storage.set('sidebar','collapsed');
-	} else {
-		ace.removeClass(sidebar , 'menu-min');
-		ace.removeClass(icon , $icon2);
-		ace.addClass(icon , $icon1);
-
-		ace.settings.unset('sidebar', 'collapsed');
-		listerly.storage.set('sidebar','expanded');
-	}
-}
-
-ListerlyMainView.prototype.setUser = function(user) {
-	if (user) {
-		$(".nav .header-user .user-menu").remove();
-		var foo = $("#loggedInDropdown").html();
-		$(".nav .header-user").append(foo);
-		$(".user-info").html('<small class="blue2">Logged in as:</small>' + user.firstName);
-	} else {
-		$(".nav .header-user .user-menu").remove();
-		var foo = $("#loggedOutDropdown").html();
-		$(".nav .header-user").append(foo);
-		$(".user-info").html('<small class="blue2">Not logged in</small>');
-	}
 }
 
 function ListerlyStorage() {

@@ -2,7 +2,6 @@ package com.listerly.resources;
 
 import static com.listerly.config.objectify.OfyService.ofy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +18,10 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.server.mvc.Template;
 
 import com.googlecode.objectify.VoidWork;
+import com.listerly.apiobj.user.AUser;
+import com.listerly.config.jersey.UserRequiredFilter.UserRequired;
 import com.listerly.dao.SpaceDAO;
 import com.listerly.dao.UserDAO;
-import com.listerly.entities.IField;
 import com.listerly.entities.ISpace;
 import com.listerly.entities.IUser;
 import com.listerly.session.SessionStore;
@@ -30,10 +30,12 @@ import com.listerly.session.SessionStore;
 public class HeyResource {
 	private static Logger log = Logger.getLogger(HeyResource.class.getName());	
 		
+	@Inject AUser fsuser;
 	@Inject UserDAO userDAO;
 	@Inject SpaceDAO spaceDAO;
 	@Inject SessionStore session;
 	
+	@UserRequired
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	@Template(name="/page.ftl")
@@ -44,6 +46,8 @@ public class HeyResource {
 			log.fine("Your session: " + session);
 			log.fine("Message in Map:" + session.get("message"));
 			log.fine("Email in Map:" + session.get("user"));
+			log.fine("Your user: " + fsuser);
+			log.fine("Is logged in: " + fsuser.isLoggedIn());
 		}
 		return map;
 	}

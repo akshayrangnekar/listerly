@@ -20,6 +20,5 @@ abstract class AbstractApiObject<T> {
 		} catch (InvocationTargetException e) {
 			log.log(Level.WARNING, "Failure creating obj", e);
 		}
-		
 	}
 }

@@ -24,12 +24,7 @@ public class JerseyConfiguration extends ResourceConfig {
         packages("com.listerly.resources");
         property("jersey.config.server.mvc.factory.freemarker", TemplateObjectFactory.class);
         register(FreemarkerMvcFeature.class);
-//        register(new AbstractBinder() {
-//            @Override
-//            protected void configure() {
-//                //bindFactory(AdminProvider.class).to(Admin.class);
-//            }
-//        });
+        register(UserRequiredFilter.class);
 
         GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);
         GuiceIntoHK2Bridge guiceBridge = serviceLocator.getService(GuiceIntoHK2Bridge.class);
