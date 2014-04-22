@@ -5,22 +5,12 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.logging.Logger.getLogger;
 
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.Map;
 import java.util.logging.Logger;
-
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.DynamicFeature;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.FeatureContext;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.glassfish.jersey.server.model.AnnotatedMethod;
 
 public class MethodWrapperExampleImpl implements MethodInterceptor {
     private final Logger log = getLogger(getClass().getName());

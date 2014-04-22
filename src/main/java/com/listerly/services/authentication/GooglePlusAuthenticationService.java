@@ -31,7 +31,6 @@ public class GooglePlusAuthenticationService implements AuthenticationService {
 
 	@Override
 	public IUser getAuthenticatedUser(String validationCode) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -19,10 +19,10 @@ import javax.ws.rs.core.UriBuilder;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.listerly.apiobj.user.AUser;
-import com.listerly.config.guice.UserProvider;
 import com.listerly.config.jersey.UserRequiredFilter.UserOptional;
 import com.listerly.dao.UserDAO;
 import com.listerly.entities.IUser;
+import com.listerly.services.UserService;
 import com.listerly.services.authentication.AuthenticationServiceProvider;
 import com.listerly.session.SessionStore;
 
@@ -33,13 +33,13 @@ public class AuthenticationResource {
 	@Inject AuthenticationServiceProvider authServiceProvider;
 	@Inject SessionStore session;
 	@Inject UserDAO userDAO;
-	@Inject UserProvider userProvider;
+	@Inject UserService userSvc;
 	
 	@GET
 	@Path("logout")
 	public Response logout() {
 		try {
-			session.put("user", null);
+			session.put("user", null); // TODO: Yeah, may want to invalidate token too.
 			return Response.seeOther(new URI("/")).build();
 		} catch (URISyntaxException e) {
 			return Response.ok().build();
@@ -51,7 +51,7 @@ public class AuthenticationResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@UserOptional
 	public AUser getLoggedInUser() {
-		AUser user = (AUser) userProvider.get();
+		AUser user = (AUser) userSvc.getRequestUser();
 		if (user != null && user.isLoggedIn()) return user;
 		return null;
 		
@@ -111,23 +111,23 @@ public class AuthenticationResource {
 	
 	private Response OAuthenticationCallback(String code, HttpServletRequest req, String serviceName) {
 		IUser pUser = authServiceProvider.getAuthenticatedUser(serviceName, code);
-		String loginToken = null;
 		if (pUser == null) {
 			log.fine("Did not succeed with " + serviceName + " authentication.");
 		} else {
 			log.fine("Succeeded with " + serviceName + " authentication.");
 			log.fine("Putting data into session: " + session);
-//			session.setUser(user);
+			userSvc.setLoggedInUser(pUser);
+			//			session.setUser(user);
 //			session.setMessage("Yo what's up dawg: " + serviceName);
 			
-			session.put("message", "Log in successful");
-			AUser aUser = new AUser(pUser);
-			session.put("user", aUser);
-			session.put("userid", pUser.getId());
-			log.fine("Put user: " + aUser.getId());
-			
-			loginToken = userDAO.createLoginToken(pUser);
-			session.put("token", loginToken);
+//			String loginToken = null;
+//			session.put("message", "Log in successful");
+//			AUser aUser = new AUser(pUser);
+//			session.put("user", aUser);
+//			session.put("userid", pUser.getId());
+//			log.fine("Put user: " + aUser.getId());
+//			loginToken = userDAO.createLoginToken(pUser);
+//			session.put("token", loginToken);
 		}
 		Object attribute = session.get("referer");//req.getSession().getAttribute("referer");
 		log.info("Finished " + serviceName + " authentication. Sending back to " + attribute.toString());

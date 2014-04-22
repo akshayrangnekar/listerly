@@ -18,6 +18,7 @@ import com.listerly.dao.SpaceDAO;
 import com.listerly.dao.UserDAO;
 import com.listerly.dao.objectify.SpaceDAOImpl;
 import com.listerly.dao.objectify.UserDAOImpl;
+import com.listerly.services.UserService;
 import com.listerly.services.authentication.AuthenticationService;
 import com.listerly.services.authentication.AuthenticationServiceProvider;
 import com.listerly.services.authentication.FacebookAuthenticationService;
@@ -68,7 +69,8 @@ public class ListerlyServletModule extends ServletModule {
 	
 	private void bindSession() {
 		bind(ISession.class).to(SessionStore.class);
-		bind(AUser.class).toProvider(UserProvider.class);
+//		bind(AUser.class).toProvider(UserProvider.class);
+		bind(UserService.class);
 	}
 
 	protected void bindFiltersAndServlets() {

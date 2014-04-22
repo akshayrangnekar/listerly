@@ -32,6 +32,17 @@ ListerlyMainView.prototype.blockMainScreen = function() {
 	});
 }
 
+ListerlyMainView.prototype.unblockElement = function(elemSelector) {
+    $(elemSelector).unblock();
+}
+
+ListerlyMainView.prototype.blockElement = function(elemSelector) {
+	$(elemSelector).block({ 
+		message: $('#loadingMessage'),
+		baseZ: 3000,         
+	});
+}
+
 ListerlyMainView.prototype.unblockMainScreen = function() {
     $.unblockUI();
 }

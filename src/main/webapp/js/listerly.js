@@ -98,7 +98,7 @@ Listerly.prototype.checkLoginState = function() {
 	this.startLoadingResource();
 	$.ajax({
 		dataType: "json",
-		url: "/authenticate/state",
+		url: "/api/v1/user/current",
 		data: {},
 		async: true,
 		cache: false,
@@ -111,7 +111,7 @@ Listerly.prototype.checkLoginState = function() {
 	});
 }
 
-Listerly.prototype.finishedLoadingUser = function(user) {
+function listerly_finishedLoadingUser(user) {
 	this.user = user;
 	this.mainView.setUser(user);
 	if (user && !user.profileComplete) {
@@ -122,6 +122,7 @@ Listerly.prototype.finishedLoadingUser = function(user) {
 		this.log("Not Showing profile modal");
 	}
 }
+Listerly.prototype.finishedLoadingUser = listerly_finishedLoadingUser;
 
 Listerly.prototype.saveUserProfile = function() {
 	var isValid = listerly.mainView.validateForm("userprofile");
@@ -129,10 +130,29 @@ Listerly.prototype.saveUserProfile = function() {
 		var editedUser = listerly.mainView.getFormValues("userprofile");
 		if (this.didObjectChange(editedUser, this.user)) {
 			this.log("Object did change.");
+			this.mainView.blockElement("#userProfileModal");
+			$.ajax({
+				dataType: "json",
+				url: "/api/v1/user/current",
+				data: JSON.stringify(editedUser),
+				async: true,
+				cache: false,
+				context: this,
+				contentType: "application/json",
+				processData: false,
+				type: 'POST',
+				success: function(data, textStatus, jqXHR) {
+					this.mainView.unblockElement("#userProfileModal");
+					listerly.mainView.hideForm("userprofile");
+					this.log("Set profile status: " + textStatus);
+					this.log(data);
+					this.finishedLoadingUser(data);
+				}
+			});
 		} else {
 			this.log("Object didn't change.");
+			listerly.mainView.hideForm("userprofile");
 		}
-		listerly.mainView.hideForm("userprofile");
 		console.log(editedUser);
 	} else {
 		console.log("Nope, not valid");
@@ -187,7 +207,7 @@ Listerly.prototype.setupListeners = function() {
 	
 	$(window).on('hashchange', function() {
 		alert(location.hash);
-		this.log("Location: " + location.hash);
+		listerly.log("Location: " + location.hash);
 	});
 }
 	

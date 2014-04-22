@@ -89,7 +89,7 @@ public class UserRequiredFilter implements DynamicFeature {
 				AUser user = (AUser) userObj;
 				String token = (String) store.get("token");
 				log.fine("Do I have a user? " + user.isLoggedIn());
-				log.fine("Do I have a token? " + token); // Maybe check the token na?
+				log.fine("Do I have a token? " + token); // TODO Maybe check the token na?
 				req.setAttribute("user", user);
 			}
 			else {
