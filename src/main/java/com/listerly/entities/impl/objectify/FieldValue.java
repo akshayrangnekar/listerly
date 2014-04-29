@@ -1,9 +1,7 @@
 package com.listerly.entities.impl.objectify;
 
-import com.googlecode.objectify.annotation.Embed;
 import com.listerly.entities.IFieldValue;
 
-@Embed
 public class FieldValue implements IFieldValue {
 	private static final long serialVersionUID = 1L;
 	

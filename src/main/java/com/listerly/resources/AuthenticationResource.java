@@ -19,9 +19,9 @@ import javax.ws.rs.core.UriBuilder;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.listerly.apiobj.user.AUser;
-import com.listerly.config.jersey.UserRequiredFilter.UserOptional;
 import com.listerly.dao.UserDAO;
 import com.listerly.entities.IUser;
+import com.listerly.filter.UserRequiredFilter.UserOptional;
 import com.listerly.services.UserService;
 import com.listerly.services.authentication.AuthenticationServiceProvider;
 import com.listerly.session.SessionStore;
@@ -39,7 +39,7 @@ public class AuthenticationResource {
 	@Path("logout")
 	public Response logout() {
 		try {
-			session.put("user", null); // TODO: Yeah, may want to invalidate token too.
+			userSvc.unsetLoggedInUser();
 			return Response.seeOther(new URI("/")).build();
 		} catch (URISyntaxException e) {
 			return Response.ok().build();

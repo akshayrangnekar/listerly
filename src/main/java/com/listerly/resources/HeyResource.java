@@ -19,11 +19,11 @@ import org.glassfish.jersey.server.mvc.Template;
 
 import com.googlecode.objectify.VoidWork;
 import com.listerly.apiobj.user.AUser;
-import com.listerly.config.jersey.UserRequiredFilter.UserRequired;
 import com.listerly.dao.SpaceDAO;
 import com.listerly.dao.UserDAO;
 import com.listerly.entities.ISpace;
 import com.listerly.entities.IUser;
+import com.listerly.filter.UserRequiredFilter.UserRequired;
 import com.listerly.session.SessionStore;
 
 @Path("/Hey")

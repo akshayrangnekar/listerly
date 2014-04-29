@@ -2,6 +2,8 @@ package com.listerly.resources.api.v1;
 
 import static java.util.logging.Logger.getLogger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -12,11 +14,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.listerly.apiobj.user.ASpaceList;
+import com.listerly.apiobj.user.ASpaceMetadata;
 import com.listerly.apiobj.user.AUser;
-import com.listerly.config.jersey.UserRequiredFilter.UserOptional;
-import com.listerly.config.jersey.UserRequiredFilter.UserRequired;
 import com.listerly.dao.UserDAO;
+import com.listerly.entities.IAccessRule;
+import com.listerly.entities.ISpace;
 import com.listerly.entities.IUser;
+import com.listerly.filter.UserRequiredFilter.UserOptional;
+import com.listerly.filter.UserRequiredFilter.UserRequired;
 import com.listerly.services.UserService;
 
 @Path("/api/v1/user/")
@@ -30,8 +36,8 @@ public class UserApi {
 	@Produces(MediaType.APPLICATION_JSON)
 	@UserOptional
 	public AUser getCurrent() {
-		AUser user = (AUser) userSvc.getRequestUser();
-		if (user != null && user.isLoggedIn()) return user;
+		IUser user = userSvc.getRequestUser();
+		if (user != null) return new AUser(user);
 		return null;
 	}
 	
@@ -40,12 +46,12 @@ public class UserApi {
 	@Path("current")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Object setCurrent(AUser in) {
+	public AUser setCurrent(AUser in) {
 		log.fine("Setting current user profile.");
 
 		if (in != null) {
 			log.fine("Got a user.");
-			AUser user = (AUser) userSvc.getRequestUser();
+			AUser user = new AUser(userSvc.getRequestUser());
 			if (user != null && user.isLoggedIn()) {
 				long currUserId = user.getId();
 				long changedUserId = in.getId();
@@ -59,7 +65,8 @@ public class UserApi {
 					pUser.setLastName(in.getLastName());
 					userDAO.save(pUser);
 					log.fine("Saved updated user.");
-					AUser loggedInUser = userSvc.setLoggedInUser(pUser);
+					userSvc.setLoggedInUser(pUser);
+					AUser loggedInUser = new AUser(pUser);
 					log.fine("Returning updated user: " + loggedInUser.getEmail() + " " + loggedInUser.getFirstName() + " " + loggedInUser.isLoggedIn());
 					return loggedInUser;
 				} else {
@@ -73,5 +80,21 @@ public class UserApi {
 		}
 		log.info("Unable to set user profile. Returning null");
 		return null;
+	}
+	
+	@GET
+	@UserRequired
+	@Path("spaces")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ASpaceList getSpaces() {
+		log.fine("Retrieving spaces");
+		List<ASpaceMetadata> spaceList = new ArrayList<>();
+		List<? extends IAccessRule> rulesForUser = userDAO.findAllRulesForUser(userSvc.getRequestUser());
+		for (IAccessRule rule : rulesForUser) {
+			ISpace space = rule.getSpace();
+			ASpaceMetadata asm = new ASpaceMetadata(space);
+			spaceList.add(asm);
+		}
+		return new ASpaceList(spaceList);
 	}
 }

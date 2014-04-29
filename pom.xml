@@ -115,7 +115,7 @@
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
 			<artifactId>objectify</artifactId>
-			<version>4.0rc2</version>
+			<version>5.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>

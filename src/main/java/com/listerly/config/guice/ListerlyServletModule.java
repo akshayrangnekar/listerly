@@ -11,7 +11,6 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFilter;
-import com.listerly.apiobj.user.AUser;
 import com.listerly.config.guice.MethodWrapperExampleImpl.ExampleAOPAnnotation;
 import com.listerly.config.jersey.JerseyFilter;
 import com.listerly.dao.SpaceDAO;

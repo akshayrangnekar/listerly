@@ -21,6 +21,7 @@
  
  [class^="iconl-"]:before, [class*=" iconl-"]:before {
   font-family: "listerly-font";
+  font-style: normal;
 }
  
 .iconl-book:before { content: '\e832'; } /* '' */

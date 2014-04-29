@@ -11,12 +11,14 @@ html, body {
 	font-weight: bold;
 }
 
+/* http://colorschemedesigner.com/#3U31Tw0w0w0w0 */
 .navbar {
-	background-color: #3c3c3c;
+	background-color: #043A6B;
 }
 
 .navbar .navbar-brand {
 	height: 40px;
+	color: #679FD2;
 }
 
 .main-logo {
@@ -106,6 +108,14 @@ html, body {
 	float: right;
 }
 
+.list-item > button[data-action="edititem"]{
+	margin-right: 15px;
+}
+
+.list-item > button[data-action="listcheckbox"],
+.list-item > button[data-action="listcheckboxchecked"]{
+}
+
 .list-item > button[data-action="listcheckbox"]:before,
 .list-item > button[data-action="listcheckboxchecked"]:before,
 .list-item > button[data-action="edititem"]:before
@@ -124,7 +134,7 @@ html, body {
 }
 
 .list-item > button[data-action="edititem"]:before {
-	content: '\e841';
+	content: '\e845';
 	color: #777799;
 }
 

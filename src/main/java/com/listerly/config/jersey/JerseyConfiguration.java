@@ -14,6 +14,7 @@ import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
 import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
 
 import com.google.inject.Injector;
+import com.listerly.filter.UserRequiredFilter;
 
 public class JerseyConfiguration extends ResourceConfig {
     private final Logger log = getLogger(getClass().getName());
@@ -30,5 +31,4 @@ public class JerseyConfiguration extends ResourceConfig {
         GuiceIntoHK2Bridge guiceBridge = serviceLocator.getService(GuiceIntoHK2Bridge.class);
         guiceBridge.bridgeGuiceInjector((Injector) servletContext.getAttribute(Injector.class.getName()));
     }
-
 }

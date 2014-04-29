@@ -110,7 +110,7 @@
 						<i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
 					</div>
 
-					<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+					<!-- <div class="sidebar-shortcuts" id="sidebar-shortcuts">
 						<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
 							<button class="btn btn-success" data-action="hideArea">
 								<i class="icon-dashboard"></i>
@@ -138,66 +138,14 @@
 
 							<span class="btn btn-danger"></span>
 						</div>
-					</div><!-- #sidebar-shortcuts -->
+					</div> --><!-- #sidebar-shortcuts -->
 
-					<ul class="nav nav-list">
+					<ul class="nav nav-list" id="spacelist-holder">
 						<li>
-							<a href="index.html">
+							<a href="#/dashboard">
 								<i class="icon-dashboard"></i>
 								<span class="menu-text"> Dashboard </span>
 							</a>
-						</li>
-
-						<li class="active open">
-							<a href="#" class="dropdown-toggle">
-								<i class="icon-tasks iconl-tasks"></i>
-								<span class="menu-text"> Spaces </span>
-
-								<b class="arrow icon-angle-down"></b>
-							</a>
-
-							<ul class="submenu">
-								<li>
-									<a href="#/space/1">
-										<i class="icon-desktop"></i>
-										Space #1
-									</a>
-								</li>
-								<li class="active">
-									<a href="#/space/2">
-										<i class="icon-desktop"></i>
-										Space #2
-										<b class="arrow icon-angle-down"></b>
-									</a>
-									<ul class="submenu">
-										<li class="active">
-											<a href="#/space/2a">
-												<i class="icon-desktop"></i>
-												Space
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<i class="icon-cogs"></i>
-												Space settings
-											</a>
-										</li>
-										<li>
-											<a href="#">
-												<i class="icon-group"></i>
-												Space permissions
-											</a>
-										</li>
-									</ul>
-								</li>
-								<li>
-									<a href="#">
-										<i class="icon-desktop"></i>
-										Space #3
-									</a>
-								</li>
-							</ul>
-
 						</li>
 
 					</ul><!-- /.nav-list -->
@@ -208,9 +156,10 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-home home-icon"></i>
-								<a href="#">Home</a>
+								<a href="#/">Home</a>
 							</li>
-							<li class="active">Dashboard</li>
+							<li class="crumb">Space</li>
+							<li class="crumb">View</li>
 						</ul><!-- .breadcrumb -->
 
 						<div class="nav-search" id="nav-search">
@@ -521,14 +470,14 @@
 		<div id="loggedInDropdown" style="display:none;">
 			<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 				<li>
-					<a href="#seeings">
+					<a href="#/settings">
 						<i class="icon-cog"></i>
 						Settings
 					</a>
 				</li>
 
 				<li>
-					<a href="#profile">
+					<a href="#/profile">
 						<i class="icon-user"></i>
 						Profile
 					</a>
@@ -665,22 +614,44 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 		<script src="/assets/js/jstorage.min.js"></script>
 		<script src="/assets/js/uncompressed/parsley-2.0.0-rc5.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.min.js"></script>
 
 		<!-- ace scripts -->
-
 		<script src="/assets/js/ace-elements.min.js"></script>
 		<script src="/assets/js/uncompressed/ace.js"></script>
 
 		<!-- inline scripts related to this page -->
 		<script src="/js/listerly.js"></script>
+		<script src="/js/listerlyUtil.js"></script>
+		<script src="/js/listerlyRouter.js"></script>
 		<script src="/js/listerlyView.js"></script>
-
 		<script type="text/javascript">
 		var listerly = new Listerly();
-		
 		jQuery(function($) {
 			listerly.init();
 		})
+		</script>
+		<script id="sidebar-boardlist-template" type="text/x-handlebars-template">
+			{{#each spaces}}
+			<li class="sidebar-element space-sidebar" id="sidebar-space-{{id}}">
+				<a href="#/space/{{id}}">
+					<i class="icon-fooo iconl-th-list"></i>
+					{{name}}
+				</a>
+				{{#if views.length}}
+				<ul class="submenu" id="sidebar-space-views-{{id}}">
+					{{#each views}}
+					<li class="sidebar-element" id="sidebar-space-view-{{uuid}}">
+						<a href="#/space/{{../id}}/view/{{uuid}}">
+							<i class="icon-desktop"></i>
+							{{name}}
+						</a>
+					</li>
+					{{/each}}
+				</ul>
+				{{/if}}
+			</li>
+			{{/each}}
 		</script>
 	</body>
 </html>

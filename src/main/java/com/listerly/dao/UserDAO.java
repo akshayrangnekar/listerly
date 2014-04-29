@@ -1,5 +1,8 @@
 package com.listerly.dao;
 
+import java.util.List;
+
+import com.listerly.entities.IAccessRule;
 import com.listerly.entities.IUser;
 
 public interface UserDAO extends DAO<IUser> {
@@ -9,4 +12,6 @@ public interface UserDAO extends DAO<IUser> {
 	
 	public String createLoginToken(IUser user);
 	public IUser getUserFromToken(String loginToken);
+	
+	public List<? extends IAccessRule> findAllRulesForUser(IUser user);
 }

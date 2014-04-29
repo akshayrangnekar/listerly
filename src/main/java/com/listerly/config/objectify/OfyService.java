@@ -3,6 +3,7 @@ package com.listerly.config.objectify;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.listerly.entities.impl.objectify.AccessRule;
 import com.listerly.entities.impl.objectify.Item;
 import com.listerly.entities.impl.objectify.LoginToken;
 import com.listerly.entities.impl.objectify.Space;
@@ -12,10 +13,9 @@ public class OfyService {
 	static {
 		factory().register(User.class);
 		factory().register(LoginToken.class);
-//		factory().register(FieldSetting.class);
-//		factory().register(FieldValue.class);
 		factory().register(Space.class);
 		factory().register(Item.class);
+		factory().register(AccessRule.class);
 	}
 	
 	public static Objectify ofy() {

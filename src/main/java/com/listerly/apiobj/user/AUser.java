@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.listerly.entities.IUser;
 
-public class AUser extends AbstractApiObject<IUser> implements Serializable, IAUser {
+public class AUser extends AbstractApiObject<IUser> implements Serializable {
 	/**
 	 * 
 	 */
@@ -30,9 +30,8 @@ public class AUser extends AbstractApiObject<IUser> implements Serializable, IAU
 	}
 	
 	public AUser() {
-		isLoggedIn = false;
 	}
-
+	
 	public Long getId() {
 		return id;
 	}

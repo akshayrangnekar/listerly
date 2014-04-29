@@ -21,33 +21,38 @@ function ListerlyMainView() {
 	}
 }
 
-ListerlyMainView.prototype.blockMainScreen = function() {
+ListerlyMainView.prototype.blockMainScreen = function ListerlyMainView_blockMainScreen() {
 	$.blockUI({ 
 		message: $('#loadingMessage'),             
 		css: {
 			top:  ($(window).height() - 100) /2 + 'px', 
         	left: ($(window).width() - 100) /2 + 'px', 
-        	width: '100px' 
+        	width: '100px',
+			border: '1px solid #111',
+			'background-color': '#fff',
+			'padding-top': '10px',
+			filter:'alpha(opacity=60)',
+			opacity:'.6'
     	}
 	});
 }
 
-ListerlyMainView.prototype.unblockElement = function(elemSelector) {
+ListerlyMainView.prototype.unblockElement = function ListerlyMainView_unblockElement(elemSelector) {
     $(elemSelector).unblock();
 }
 
-ListerlyMainView.prototype.blockElement = function(elemSelector) {
+ListerlyMainView.prototype.blockElement = function ListerlyMainView_blockElement(elemSelector) {
 	$(elemSelector).block({ 
 		message: $('#loadingMessage'),
 		baseZ: 3000,         
 	});
 }
 
-ListerlyMainView.prototype.unblockMainScreen = function() {
+ListerlyMainView.prototype.unblockMainScreen = function ListerlyMainView_unblockMainScreen() {
     $.unblockUI();
 }
 
-ListerlyMainView.prototype.savedSidebarState = function() {
+ListerlyMainView.prototype.savedSidebarState = function ListerlyMainView_savedSidebarState() {
 	var sidebar = listerly.storage.get('sidebar');
 	if (sidebar == 'collapsed') {
 		this.sidebar_collapsed(true);
@@ -56,7 +61,7 @@ ListerlyMainView.prototype.savedSidebarState = function() {
 	}
 }
 
-ListerlyMainView.prototype.sidebar_collapsed = function(collpase) {
+ListerlyMainView.prototype.sidebar_collapsed = function ListerlyMainView_sidebar_collapsed(collpase) {
 	collpase = collpase || false;
 
 	var sidebar = document.getElementById('sidebar');
@@ -81,7 +86,7 @@ ListerlyMainView.prototype.sidebar_collapsed = function(collpase) {
 	}
 }
 
-ListerlyMainView.prototype.setUser = function(user) {
+ListerlyMainView.prototype.setUser = function ListerlyMainView_setUser(user) {
 	if (user) {
 		$(".nav .header-user .user-menu").remove();
 		var foo = $("#loggedInDropdown").html();
@@ -95,7 +100,7 @@ ListerlyMainView.prototype.setUser = function(user) {
 	}
 }
 
-ListerlyMainView.prototype.showForm = function(key, item) {
+ListerlyMainView.prototype.showForm = function ListerlyMainView_showForm(key, item) {
 	var formMapping = this.formMappings[key];
 	if (formMapping) {
 		if (formMapping.modal) {
@@ -115,7 +120,7 @@ ListerlyMainView.prototype.showForm = function(key, item) {
 	}
 }
 
-ListerlyMainView.prototype.validateForm = function(key) {
+ListerlyMainView.prototype.validateForm = function ListerlyMainView_validateForm(key) {
 	var formMapping = this.formMappings[key];
 	var item = {};
 	if (formMapping) {
@@ -123,16 +128,15 @@ ListerlyMainView.prototype.validateForm = function(key) {
 			var theFormModal = $(formMapping.modal);
 			var theForm = theFormModal.find("form");
 			var par = theForm.parsley();
-			console.log("Parsley: ");
-			console.log(par);
+			listerly.logObject("userprofile", "Parsley object", par);
 			var r = par.validate();
-			console.log("Valid: " + r);
+			listerly.log("userprofile", "Valid: " + r);
 			return r;
 		}
 	}
 }
 
-ListerlyMainView.prototype.getFormValues = function(key) {
+ListerlyMainView.prototype.getFormValues = function ListerlyMainView_getFormValues(key) {
 	var formMapping = this.formMappings[key];
 	var item = {};
 	if (formMapping) {
@@ -153,11 +157,36 @@ ListerlyMainView.prototype.getFormValues = function(key) {
 	}
 }
 
-ListerlyMainView.prototype.hideForm = function(key) {
+ListerlyMainView.prototype.hideForm = function ListerlyMainView_hideForm(key) {
 	var formMapping = this.formMappings[key];
 	if (formMapping && formMapping.modal) {
 		var theForm = $(formMapping.modal);
+		listerly.log("userprofile", "Hiding modal");
 		theForm.modal('hide');
+	}
+}
+
+ListerlyMainView.prototype.showSpaceList = function ListerlyMainView_showSpaceList(spaceList) {
+	var menuSource = $('#sidebar-boardlist-template').html();
+	var menuTemplate = Handlebars.compile( menuSource );
+	var theData = menuTemplate(spaceList);
+	$(".space-nav").remove();
+	$("#spacelist-holder").append(theData);
+}
+
+ListerlyMainView.prototype.setSidebarSpaceAndBreadcrumbs = function ListerlyMainView_setSidebarSpace(space, view) {
+	listerly.logObject("loadspace", "loading space", space);
+	listerly.logObject("loadspace", "loading space view", view);
+	
+	$(".sidebar-element.active").removeClass("active");
+	$("#breadcrumbs .crumb").remove();
+	if (space) {
+		$("#sidebar-space-"+space.id).addClass("active");
+		$("#breadcrumbs .breadcrumb").append("<li class='crumb'>" + space.name + "</li>")
+		if (view) {
+			$("#sidebar-space-view-"+view.uuid).addClass("active");
+	 		$("#breadcrumbs .breadcrumb").append("<li class='crumb'>" + view.name + "</li>")
+		}
 	}
 }
 
@@ -311,7 +340,7 @@ ListerlyView.prototype.resizeListHeights = function (dimensions) {
 	});
 }
 
-ListerlyView.prototype.calculateDimensions = function (dimensions) {
+ListerlyView.prototype.calculateDimensions = function ListerlyView_calculateDimensions(dimensions) {
 	var oH = $( window ).innerHeight();
 	var headerH = $(".navbar").height(); 
 	var topBarH = $("#breadcrumbs").height();

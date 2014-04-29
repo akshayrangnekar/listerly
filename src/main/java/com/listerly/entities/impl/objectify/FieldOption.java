@@ -15,18 +15,23 @@ public class FieldOption implements IFieldOption {
 	public String getUuid() {
 		return uuid;
 	}
+	
 	public void setUuid(String id) {
 		this.uuid = id;
 	}
+	
 	public String getDisplay() {
 		return display;
 	}
+	
 	public void setDisplay(String display) {
 		this.display = display;
 	}
+	
 	public String getColorCode() {
 		return colorCode;
 	}
+	
 	public void setColorCode(String colorCode) {
 		this.colorCode = colorCode;
 	}

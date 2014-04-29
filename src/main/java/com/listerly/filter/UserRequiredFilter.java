@@ -1,4 +1,4 @@
-package com.listerly.config.jersey;
+package com.listerly.filter;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -10,6 +10,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -21,7 +22,8 @@ import javax.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.server.model.AnnotatedMethod;
 
-import com.listerly.apiobj.user.AUser;
+import com.listerly.dao.UserDAO;
+import com.listerly.entities.IUser;
 import com.listerly.session.SessionStore;
 
 public class UserRequiredFilter implements DynamicFeature {
@@ -64,8 +66,8 @@ public class UserRequiredFilter implements DynamicFeature {
 				log.fine("No user found. Throwing exception.");
 				throw new ForbiddenException();
 			} else {
-				AUser user = (AUser) obj;
-				if (!user.isLoggedIn()) {
+				IUser user = (IUser) obj;
+				if (user.getId() == null) {
 					log.fine("User not logged in. Throwing exception.");
 					throw new ForbiddenException();
 				}
@@ -78,19 +80,24 @@ public class UserRequiredFilter implements DynamicFeature {
         private final Logger log = getLogger(getClass().getName());
 
     	@Context HttpServletRequest req;
+    	@Inject UserDAO userDAO;
     	
 		@Override
 		public void filter(ContainerRequestContext crc) throws IOException {
 			log.finest("Inside filter");
 			log.fine("Do I have a request session? " + req.getSession(false));
 			SessionStore store = new SessionStore(req);
-			Object userObj = store.get("user");
-			if (userObj != null) {
-				AUser user = (AUser) userObj;
-				String token = (String) store.get("token");
-				log.fine("Do I have a user? " + user.isLoggedIn());
-				log.fine("Do I have a token? " + token); // TODO Maybe check the token na?
-				req.setAttribute("user", user);
+			Object userToken = store.get("token");
+			if (userToken != null) {
+				log.fine("Token in session: " + userToken);
+				//IUser user = (IUser) userToken;
+				IUser fromToken = userDAO.getUserFromToken(userToken.toString()); // TODO Maybe check the token na?
+				if (fromToken != null) {
+					log.fine("Got a user from Token: " + fromToken.getId());
+					req.setAttribute("user", fromToken);
+				} else {
+					log.fine("No user matching token.");
+				}
 			}
 			else {
 				log.info("Don't seem to have a user.");

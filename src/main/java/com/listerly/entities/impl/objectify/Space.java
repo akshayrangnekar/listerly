@@ -16,6 +16,7 @@ import com.googlecode.objectify.annotation.OnSave;
 import com.googlecode.objectify.annotation.Unindex;
 import com.listerly.entities.IField;
 import com.listerly.entities.ISpace;
+import com.listerly.entities.ISpaceView;
 
 @Entity
 @Cache
@@ -28,11 +29,12 @@ public class Space implements ISpace {
 	private static final long serialVersionUID = 7842136513064948649L;
 	
 	@Id private Long id;
-	private String name;
+	@Unindex private String name;
 	@Unindex private List<Field> fields = new ArrayList<>();
 	@Index @Load List<Ref<Item>> items;
-	private Long parentId;
-	private Date created = new Date();
+	@Index private Long parentId;
+	@Unindex private Date created = new Date();
+	@Unindex private List<SpaceView> views = new ArrayList<>();
 
 	public Space() {
 	}
@@ -98,7 +100,7 @@ public class Space implements ISpace {
 	}
 
 	@Override
-	public IField createFieldSetting() {
+	public IField createField() {
 		log.fine("Creating a new field setting");
 		IField fs = new Field();
 		addFieldSetting(fs);
@@ -107,11 +109,34 @@ public class Space implements ISpace {
 	}
 
 	@Override
-	public IField createFieldSetting(int index) {
+	public IField createField(int index) {
 		log.fine("Creating a new field setting");
 		IField fs = new Field();
 		addFieldSetting(index, fs);
 		log.fine("Field settings now: " + getFields().size());
 		return fs;
+	}
+
+	@Override
+	public List<? extends ISpaceView> getViews() {
+		return views;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ISpaceView createView() {
+		SpaceView spaceView = new SpaceView();
+		List<SpaceView> list = (List<SpaceView>) getViews();
+		list.add(spaceView);
+		return spaceView;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ISpaceView createView(int index) {
+		SpaceView spaceView = new SpaceView();
+		List<SpaceView> list = (List<SpaceView>) getViews();
+		list.add(index, spaceView);;
+		return spaceView;
 	}
 }

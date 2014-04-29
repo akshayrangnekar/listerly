@@ -2,23 +2,18 @@ package com.listerly.entities.impl.objectify;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Ignore;
-import com.listerly.entities.IFieldOption;
-import com.listerly.entities.IFieldOptions;
 import com.listerly.entities.IField;
+import com.listerly.entities.IFieldOptions;
 import com.listerly.util.IDGenerator;
 
-@Embed
 public class Field implements IField {
 	private static Logger log = Logger.getLogger(Field.class.getName());	
 	/**

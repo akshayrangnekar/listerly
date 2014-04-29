@@ -6,6 +6,7 @@ import java.util.Date;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import com.listerly.util.IDGenerator;
 
 @Entity
@@ -17,8 +18,8 @@ public class LoginToken implements Serializable {
 	private static final long serialVersionUID = -3096608751047729456L;
 
 	@Id private Long id;
-	private Long userId;
-	private String uuid;
+	@Index private Long userId;
+	@Index private String uuid;
 	private Date created;
 	private Date expires;
 	
