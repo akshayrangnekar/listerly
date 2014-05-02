@@ -22,7 +22,7 @@ function ListerlyMainView() {
 }
 
 ListerlyMainView.prototype.blockMainScreen = function ListerlyMainView_blockMainScreen() {
-	$.blockUI({ 
+	$("#main-container").block({ 
 		message: $('#loadingMessage'),             
 		css: {
 			top:  ($(window).height() - 100) /2 + 'px', 
@@ -49,7 +49,7 @@ ListerlyMainView.prototype.blockElement = function ListerlyMainView_blockElement
 }
 
 ListerlyMainView.prototype.unblockMainScreen = function ListerlyMainView_unblockMainScreen() {
-    $.unblockUI();
+	$("#main-container").unblock()
 }
 
 ListerlyMainView.prototype.savedSidebarState = function ListerlyMainView_savedSidebarState() {

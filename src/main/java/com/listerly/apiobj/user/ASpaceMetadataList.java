@@ -2,10 +2,10 @@ package com.listerly.apiobj.user;
 
 import java.util.List;
 
-public class ASpaceList {
+public class ASpaceMetadataList {
 	private List<ASpaceMetadata> spaces;
 	
-	public ASpaceList(List<ASpaceMetadata> spaces) {
+	public ASpaceMetadataList(List<ASpaceMetadata> spaces) {
 		this.spaces = spaces;
 	}
 	

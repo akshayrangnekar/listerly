@@ -278,6 +278,8 @@ Listerly.prototype.checkProfile = function listerly_checkProfile() {
 }
 
 Listerly.prototype.loadSpace = function listerly_loadSpace(pathDetails) {
+	this.mainView.blockMainScreen();
+
 	this.logObject("loadspace", "Loading space with arguments: ", pathDetails);
 	var spaceId = pathDetails.space;
 	this.log("loadspace", "Finding space with id: " + spaceId);
@@ -287,6 +289,23 @@ Listerly.prototype.loadSpace = function listerly_loadSpace(pathDetails) {
 		spaceVM = this.getSpaceViewMetadata(spaceM, pathDetails.view);
 	}
 	this.mainView.setSidebarSpaceAndBreadcrumbs(spaceM, spaceVM);
+	this.loadSpaceFromServer(spaceM);
+}
+
+Listerly.prototype.loadSpaceFromServer = function loadSpaceFromServer(spaceM) {
+	this.log("loadspace", "Loading Space: " + spaceM.id);
+	$.ajax({
+		dataType: "json",
+		url: "/api/v1/space/" + spaceM.id,
+		data: {},
+		async: true,
+		cache: false,
+		context: this,
+		success: function finishedLoadingSpacesCallback(data, textStatus, jqXHR) {
+			this.logObject("loadspace", "Spaces status: " + textStatus, data);
+			this.mainView.unblockMainScreen();
+		}
+	});
 }
 
 Listerly.prototype.getSpaceMetadata = function(spaceId) {

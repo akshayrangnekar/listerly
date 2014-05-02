@@ -2,13 +2,12 @@ package com.listerly.apiobj.user;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.listerly.entities.ISpace;
 import com.listerly.entities.ISpaceView;
 
 public class ASpaceMetadata extends AbstractApiObject<ISpace> {
-	private static Logger log = Logger.getLogger(ASpaceMetadata.class.getName());	
+	//private static Logger log = Logger.getLogger(ASpaceMetadata.class.getName());	
 
 	private Long id;
 	private String name;
@@ -16,6 +15,11 @@ public class ASpaceMetadata extends AbstractApiObject<ISpace> {
 	
 	public ASpaceMetadata(ISpace space) {
 		super(space);
+		
+		this.views = new ArrayList<>();
+		for (ISpaceView view : space.getViews()) {
+			this.views.add(new AViewMetadata(view));
+		}
 	}
 
 	public Long getId() {

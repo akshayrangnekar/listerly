@@ -14,7 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.listerly.apiobj.user.ASpaceList;
+import com.listerly.apiobj.user.ASpaceMetadataList;
 import com.listerly.apiobj.user.ASpaceMetadata;
 import com.listerly.apiobj.user.AUser;
 import com.listerly.dao.UserDAO;
@@ -86,7 +86,7 @@ public class UserApi {
 	@UserRequired
 	@Path("spaces")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ASpaceList getSpaces() {
+	public ASpaceMetadataList getSpaces() {
 		log.fine("Retrieving spaces");
 		List<ASpaceMetadata> spaceList = new ArrayList<>();
 		List<? extends IAccessRule> rulesForUser = userDAO.findAllRulesForUser(userSvc.getRequestUser());
@@ -95,6 +95,6 @@ public class UserApi {
 			ASpaceMetadata asm = new ASpaceMetadata(space);
 			spaceList.add(asm);
 		}
-		return new ASpaceList(spaceList);
+		return new ASpaceMetadataList(spaceList);
 	}
 }

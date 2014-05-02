@@ -16,17 +16,16 @@ import javax.ws.rs.core.MediaType;
 import com.googlecode.objectify.VoidWork;
 import com.listerly.dao.SpaceDAO;
 import com.listerly.dao.UserDAO;
+import com.listerly.entities.IAccessRule.AccessLevel;
 import com.listerly.entities.IField;
 import com.listerly.entities.IFieldOption;
-import com.listerly.entities.IFieldOptions;
 import com.listerly.entities.ISpace;
 import com.listerly.entities.ISpaceView;
 import com.listerly.entities.IUser;
-import com.listerly.entities.IAccessRule.AccessLevel;
 
 @Path("/testdata")
 public class TestDataResource {
-	private static Logger log = Logger.getLogger(HeyResource.class.getName());	
+	private static Logger log = Logger.getLogger(TestDataResource.class.getName());	
 	
 	@Inject SpaceDAO spaceDAO;
 	@Inject UserDAO userDAO;
@@ -36,7 +35,16 @@ public class TestDataResource {
 	@Path("/generate") public String generate() {
 		StringBuilder builder = new StringBuilder();
 		log.fine("Generating test data.");
-		ISpace space = createNewSpace();
+		ISpace space = createNewSpace("Akshay's Notes", "Importance", "Category");
+		space = setupSpace(space);
+		space = createNewSpace("Akshay's Work Tasks Notes", "Level", "Group");
+		space = setupSpace(space);
+
+		builder.append("Created board: ").append(space.getId()).append("\n");
+		return builder.toString();
+	}
+	
+	private ISpace setupSpace(ISpace space) {
 		space = createSpaceViews(space);
 		log.fine("Saving space.");
 		spaceDAO.save(space);
@@ -44,10 +52,9 @@ public class TestDataResource {
 
 		IUser user = createOrGetUser();
 		spaceDAO.createAccessRule(space, user, AccessLevel.READWRITE);
-		
-		builder.append("Created board: ").append(space.getId()).append("\n");
-		return builder.toString();
+		return space;
 	}
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/space/{spaceId}") public Object retrieveSpace(@PathParam("spaceId") Long spaceId) {
@@ -85,10 +92,10 @@ public class TestDataResource {
 		
 		return user;
 	}
-	private ISpace createNewSpace() {
+	private ISpace createNewSpace(String name, String importanceFieldName, String categoryFieldName) {
 		log.fine("Creating space.");
 		ISpace space = spaceDAO.create();
-		space.setName("Akshay's Task List");
+		space.setName(name);
 
 		log.fine("Creating Status field.");
 		IField fieldStatus = space.createField();
@@ -104,47 +111,44 @@ public class TestDataResource {
 		
 		log.fine("Creating Importance field.");
 		IField importance = space.createField();
-		importance.setName("Importance");
+		importance.setName(importanceFieldName);
 		importance.setType("select-fixed");
 		importance.setSetting("fixed", true);
 		importance.setListable(true);
-		IFieldOptions fieldOptions = importance.getFieldOptions();
-			IFieldOption option = fieldOptions.createAtEnd();
-				option.setColorCode("red2");
-				option.setDisplay("Urgent and Important");
-			
-			option = fieldOptions.createAtEnd();
-				option.setColorCode("orange");
-				option.setDisplay("Important");
-			
-			option = fieldOptions.createAtEnd();
-				option.setColorCode("orange");
-				option.setDisplay("Urgent");
-			
-			option = fieldOptions.createAtEnd();
-				option.setColorCode("green");
-				option.setDisplay("Not Urgent or Important");
+		IFieldOption option = importance.createOption();
+			option.setColorCode("red2");
+			option.setDisplay("Urgent and Important");
+		
+		option = importance.createOption();
+			option.setColorCode("orange");
+			option.setDisplay("Important");
+		
+		option = importance.createOption();
+			option.setColorCode("orange");
+			option.setDisplay("Urgent");
+		
+		option = importance.createOption();
+			option.setColorCode("green");
+			option.setDisplay("Not Urgent or Important");
 		
 		
 		log.fine("Creating Category field.");
 		IField category = space.createField();
-		category.setName("Category");
+		category.setName(categoryFieldName);
 		category.setType("select");
 		category.setSetting("fixed", false);
 		category.setListable(true);
-		fieldOptions = category.getFieldOptions();
-			option = fieldOptions.createAtEnd();
-				option.setColorCode("blue2");
-				option.setDisplay("Personal");
-			
-			option = fieldOptions.createAtEnd();
-				option.setColorCode("purple");
-				option.setDisplay("Source");
+		option = category.createOption();
+			option.setColorCode("blue2");
+			option.setDisplay("Personal");
 		
-			option = fieldOptions.createAtEnd();
-				option.setColorCode("green");
-				option.setDisplay("Listerly");
-		
+		option = category.createOption();
+			option.setColorCode("purple");
+			option.setDisplay("Source");
+	
+		option = category.createOption();
+			option.setColorCode("green");
+			option.setDisplay("Listerly");
 
 		return space;
 	}

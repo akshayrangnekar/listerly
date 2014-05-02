@@ -3,6 +3,7 @@ package com.listerly.entities.impl.objectify;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -11,7 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.objectify.annotation.Ignore;
 import com.listerly.entities.IField;
-import com.listerly.entities.IFieldOptions;
+import com.listerly.entities.IFieldOption;
 import com.listerly.util.IDGenerator;
 
 public class Field implements IField {
@@ -20,7 +21,6 @@ public class Field implements IField {
 	 * 
 	 */
 	private static final long serialVersionUID = 29021641246155143L;
-	private static final String kSettingsField = "__FIELD_SETTINGS";
 
 	protected String uuid;
 	protected String name;
@@ -28,6 +28,7 @@ public class Field implements IField {
 	protected String type;
 	@Ignore protected Map<String, Object> additionalSettings = new HashMap<String, Object>();
 	protected String serializedSettings;
+	protected List<FieldOption> fieldOptions;
 	
 	public Field() {
 		setUuid(IDGenerator.str());
@@ -65,18 +66,18 @@ public class Field implements IField {
 		this.type = type;
 	}
 	
-	public IFieldOptions getFieldOptions() {
-		FieldOptions fo = null;
-		Object object = this.additionalSettings.get(kSettingsField);
-		if (object instanceof FieldOptions) {
-			fo = (FieldOptions) object;
-		}
-		if (fo == null) {
-			fo = new FieldOptions();
-			this.additionalSettings.put(kSettingsField, fo);
-		}
+	public List<FieldOption> getFieldOptions() {
+		if (this.fieldOptions == null) this.fieldOptions = new ArrayList<>();
+		return this.fieldOptions;
+	}
+
+	@Override
+	public IFieldOption createOption() {
+		FieldOption fo = new FieldOption();
+		getFieldOptions().add(fo);
 		return fo;
 	}
+
 
 	protected Map<String, Object> getAdditionalSettings() {
 		return additionalSettings;
@@ -104,14 +105,6 @@ public class Field implements IField {
 				ObjectMapper mapper = new ObjectMapper();
 				@SuppressWarnings("unchecked")
 				HashMap<String, Object> map = mapper.readValue(this.serializedSettings, HashMap.class);
-				Object fieldSettingsStr = map.get(kSettingsField);
-				log.fine("Field Options String:" + fieldSettingsStr);
-				if (fieldSettingsStr != null) {
-					@SuppressWarnings("unchecked")
-					ArrayList<FieldOption> afo = mapper.readValue((String)fieldSettingsStr, ArrayList.class);
-					FieldOptions fo = new FieldOptions(afo);
-					map.put(kSettingsField, fo);
-				}
 				setAdditionalSettings(map);
 			} catch (JsonParseException e) {
 				log.warning("Unable to parse string for additional settings.");
@@ -125,12 +118,7 @@ public class Field implements IField {
 		if (getAdditionalSettings().size() > 0) {
 			ObjectMapper mapper = new ObjectMapper();
 			try {
-				IFieldOptions fieldOptions = getFieldOptions();
-				log.fine("Field Options Size: " + fieldOptions.size());
-				String fieldOptionsStr = mapper.writeValueAsString(fieldOptions);
-				log.fine("Field Options String: " + fieldOptionsStr);
 				Map<String, Object> additionalSettings = getAdditionalSettings();
-				additionalSettings.put(kSettingsField, fieldOptionsStr);
 				String valueAsString = mapper.writeValueAsString(additionalSettings);
 				this.serializedSettings = valueAsString;
 			} catch (JsonProcessingException e) {

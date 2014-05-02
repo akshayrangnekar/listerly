@@ -125,5 +125,4 @@ public class HeyResource {
 //		builder.append("Space fields: ").append(space.getFields().size()).append("\n");
 		return builder.toString();
 	}
-
 }

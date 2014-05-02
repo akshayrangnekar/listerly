@@ -20,8 +20,8 @@ public class LoginToken implements Serializable {
 	@Id private Long id;
 	@Index private Long userId;
 	@Index private String uuid;
-	private Date created;
-	private Date expires;
+	@Index private Date created;
+	@Index private Date expires;
 	
 	public LoginToken() {
 		created = new Date();
