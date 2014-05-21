@@ -48,6 +48,10 @@ abstract class AbstractDAO<T> {
 		T user = ofy().consistency(Consistency.STRONG).load().type(cls).filter(field, value).first().now();
 		return user;
 	}
+	
+	public List<? extends T> findAllByField(String field, Object value) {
+		return ofy().consistency(Consistency.STRONG).load().type(cls).filter(field, value).list();
+	}
 
 	public T findById(Long id) {
 		Key<T> key = Key.create(cls, id);

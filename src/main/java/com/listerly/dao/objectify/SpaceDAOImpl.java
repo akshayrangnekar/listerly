@@ -19,26 +19,35 @@ import com.listerly.entities.impl.objectify.Space;
 import com.listerly.entities.impl.objectify.User;
 
 public class SpaceDAOImpl extends AbstractDAO<ISpace> implements SpaceDAO {
+	
+	private ItemDAOImpl itemDAO;
+	
+	public static class ItemDAOImpl extends AbstractDAO<IItem> {
+		public ItemDAOImpl() {
+			super(Item.class);
+		}
+	}
+	
 	public SpaceDAOImpl() {
 		super(Space.class);
+		itemDAO = new ItemDAOImpl();
 	}
 
 	@Override
 	public IItem createItemInSpace(ISpace space) {
 		Item item = new Item();
+		item.setSpaceId(space.getId());
 		return item;
 	}
 
 	@Override
 	public List<? extends IItem> findAllCardsInSpace(ISpace space) {
-		// TODO Auto-generated method stub
-		return null;
+		return itemDAO.findAllByField("spaceId", space.getId());
 	}
 
 	@Override
-	public IItem saveItemInSpace(ISpace space, IItem item) {
-		// TODO Auto-generated method stub
-		return null;
+	public IItem saveItem(IItem item) {
+		return itemDAO.save(item);
 	}
 
 	@Override

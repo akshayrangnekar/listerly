@@ -2,6 +2,7 @@ package com.listerly.apiobj.user;
 
 import java.io.Serializable;
 
+import com.listerly.apiobj.AbstractApiObject;
 import com.listerly.entities.IUser;
 
 public class AUser extends AbstractApiObject<IUser> implements Serializable {

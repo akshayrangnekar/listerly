@@ -14,8 +14,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.listerly.apiobj.user.ASpaceMetadataList;
-import com.listerly.apiobj.user.ASpaceMetadata;
+import com.listerly.apiobj.space.ASpaceMetadata;
+import com.listerly.apiobj.space.ASpaceMetadataList;
 import com.listerly.apiobj.user.AUser;
 import com.listerly.dao.UserDAO;
 import com.listerly.entities.IAccessRule;

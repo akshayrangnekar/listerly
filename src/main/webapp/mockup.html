@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Listerly</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!-- basic styles -->
+
+		<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css" rel="stylesheet" />
+		<link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
+		<!--[if IE 7]>
+		  <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css" />
+		<![endif]-->
+
+
+		<!-- page specific plugin styles -->
+
+		<!-- fonts -->
+
+		<link rel="stylesheet" href="/assets/css/ace-fonts.css" />
+
+	    <link rel="stylesheet" href="/assets/css/listerly-font.css">
+	    <!--if IE 7
+	    link(rel='stylesheet', href='/assets/css/listerly-font-ie7.css')
+	    -->
+		<!-- ace styles -->
+
+		<link rel="stylesheet" href="/assets/css/ace.min.css" />
+
+		<!--[if lte IE 8]>
+		  <link rel="stylesheet" href="/assets/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- ace settings handler -->
+
+		<script src="/assets/js/ace-extra.min.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+		<!--[if lt IE 9]>
+		<script src="/assets/js/html5shiv.js"></script>
+		<script src="/assets/js/respond.min.js"></script>
+		<![endif]-->
+			
+		<link rel="stylesheet" href="/css/listerly.css" />
+		
+		<link rel="icon" type="img/ico" href="/favicon.ico">
+	</head>
+
+	<body>
+		<div class="navbar navbar-default" id="navbar">
+			<div class="navbar-container" id="navbar-container">
+				<div class="navbar-header pull-left">
+					<a href="#" class="navbar-brand"><small><img src="/img/logo/logo-new4.png" class="main-logo" />&nbsp;Listerly</small></a><!-- /.brand -->
+				</div><!-- /.navbar-header -->
+
+				<div class="navbar-header pull-right" role="navigation">
+					<ul class="nav ace-nav">
+						<li class="light-blue header-user">
+							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="/assets/avatars/profile-picture-default.png" />
+								<span class="user-info">
+										<small class="blue2">Not logged in</small>
+<!-- 									<small class="blue2">Logged in as:</small>
+									User
+								 --></span>
+
+								<i class="icon-caret-down"></i>
+							</a>
+
+							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+								<li>
+									<a href="/authenticate/facebook">
+										<i class="icon-foo iconl-facebook"></i>
+										Login with Facebook
+									</a>
+								</li>
+								<li>
+									<a href="/authenticate/google">
+										<i class="icon-foo iconl-gplus"></i>
+										Login with Google
+									</a>
+								</li>
+								<li>
+									<a href="/authenticate/twitter">
+										<i class="icon-foo iconl-twitter"></i>
+										Login with Twitter
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul><!-- /.ace-nav -->
+				</div><!-- /.navbar-header -->
+			</div><!-- /.container -->
+		</div>
+		<div class="main-container" id="main-container">
+
+			<div class="main-container-inner">
+				<a class="menu-toggler" id="menu-toggler" href="#">
+					<span class="menu-text"></span>
+				</a>
+
+				<div class="sidebar" id="sidebar">
+					<div class="sidebar-collapse" id="listerly-sidebar-collapse">
+						<i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+					</div>
+
+					<!-- <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+						<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+							<button class="btn btn-success" data-action="hideArea">
+								<i class="icon-dashboard"></i>
+							</button>
+
+							<button class="btn btn-info" data-action="showArea">
+								<i class="icon-desktop"></i>
+							</button>
+
+							<button class="btn btn-warning">
+								<i class="icon-basket iconl-basket"></i>
+							</button>
+
+							<button class="btn btn-danger">
+								<i class="icon-cogs"></i>
+							</button>
+						</div>
+
+						<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+							<span class="btn btn-success"></span>
+
+							<span class="btn btn-info"></span>
+
+							<span class="btn btn-warning"></span>
+
+							<span class="btn btn-danger"></span>
+						</div>
+					</div> --><!-- #sidebar-shortcuts -->
+
+					<ul class="nav nav-list" id="spacelist-holder">
+						<li>
+							<a href="#/dashboard">
+								<i class="icon-dashboard"></i>
+								<span class="menu-text"> Dashboard </span>
+							</a>
+						</li>
+
+					</ul><!-- /.nav-list -->
+				</div>
+
+				<div class="main-content">
+					<div class="breadcrumbs" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home home-icon"></i>
+								<a href="#/">Home</a>
+							</li>
+							<li class="crumb">Space</li>
+							<li class="crumb">View</li>
+						</ul><!-- .breadcrumb -->
+
+						<div class="nav-search" id="nav-search">
+							<form class="form-search">
+								<span class="input-icon">
+									<input type="text" placeholder="Filter ..." class="nav-search-input" autocomplete="off" />
+									<i class="icon-search nav-search-icon"></i>
+								</span>
+							</form>
+						</div><!-- #nav-search -->
+					</div>
+					<div class="page-content">
+						<div id="lists">
+								<div class="widget-box listerly-list">
+									<div class="widget-header listerly-list-header widget-header-small header-color-blue">
+										<h6>
+											Small Header & Collapsed
+										</h6>
+
+										<div class="widget-toolbar">
+											<a href="#foo">
+												<i class="icon-foo iconl-resize-full"></i>
+											</a>
+										</div>
+									</div>
+									<div class="widget-body list-body dd">
+										<ol class="widget-main dd-list list-main dd-list">
+											<li class="list-item dd-item" data-id="4">
+												<button class="item-button" data-action="edititem" type="button" data-id="1001">
+													Edit
+												</button>
+												<button class="item-button" data-action="listcheckbox" type="button" data-id="1001">
+													Checkbox
+												</button>
+												<button class="item-button" data-action="listcheckboxchecked" type="button" style="display:none"  data-id="1001">
+													CheckboxChecked
+												</button>
+												<div class="dd-handle list-item-body">
+													<div>
+														<div class="label label-sm label-warning arrowed">
+															<i class="icon-warning-sign"></i>
+															Warning
+														</div>
+													</div>
+													<div>
+														<div class="label label-sm label-danger arrowed-in">
+															<i class="icon-bolt"></i>
+															Hello
+														</div> 
+													</div>
+													<div>
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+													</div>
+												</div>
+											</li>
+											<li class="list-item dd-item" data-id="5">
+												<button class="item-button" data-action="edititem" type="button" data-id="5">
+													Edit
+												</button>
+												<button class="item-button" data-action="listcheckbox" type="button" data-id="5">
+													Checkbox
+												</button>
+												<button class="item-button" data-action="listcheckboxchecked" type="button" style="display:none"  data-id="5">
+													CheckboxChecked
+												</button>
+												<div class="dd-handle list-item-body">
+													<div class="label label-sm label-warning arrowed">
+														<i class="icon-warning-sign"></i>
+														Warning
+													</div>
+													<div>
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+													</div>
+												</div>
+											</li>
+
+											<li class="list-item dd-item item-red2" data-id="5">
+												<div class="dd-handle">
+													Item 5
+												</div>
+
+												<ol class="dd-list">
+													<li class="list-item dd-item item-orange" data-id="6">
+														<div class="dd-handle"> Item 6 </div>
+													</li>
+
+													<li class="list-item dd-item item-red" data-id="7">
+														<div class="dd-handle">Item 7</div>
+													</li>
+
+													<li class="list-item dd-item item-blue2" data-id="8">
+														<div class="dd-handle">Item 8</div>
+													</li>
+												</ol>
+											</li>
+											
+										</ol>
+									</div>
+								</div>
+								<div class="widget-box listerly-list">
+									
+									<div class="widget-header listerly-list-header widget-header-small header-color-blue3">
+										<h6>
+											Small Header & Collapsed
+										</h6>
+
+										<div class="widget-toolbar">
+											<a href="#" data-action="settings">
+												<i class="icon-arrow-left"></i>
+											</a>
+
+											<a href="#" data-action="reload">
+												<i class="icon-arrow-right"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="widget-body list-body dd">
+										<ol class="widget-main dd-list list-main dd-list">
+											<li class="list-item dd-item" data-id="4">
+												<div class="dd-handle">
+													Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+												</div>
+											</li>
+
+											<li class="list-item dd-item item-red2" data-id="5">
+												<div class="dd-handle">
+													Item 5
+												</div>
+
+												<ol class="dd-list">
+													<li class="list-item dd-item item-orange" data-id="6">
+														<div class="dd-handle"> Item 6 </div>
+													</li>
+
+													<li class="list-item dd-item item-red" data-id="7">
+														<div class="dd-handle">Item 7</div>
+													</li>
+
+													<li class="list-item dd-item item-blue2" data-id="8">
+														<div class="dd-handle">Item 8</div>
+													</li>
+												</ol>
+											</li>
+											
+										</ol>
+									</div>
+								</div>
+								<div class="widget-box listerly-list">
+									
+									<div class="widget-header listerly-list-header widget-header-small header-color-red2">
+										<h6>
+											Small Header & Collapsed
+										</h6>
+
+										<div class="widget-toolbar">
+											<a href="#" data-action="settings">
+												<i class="icon-arrow-left"></i>
+											</a>
+
+											<a href="#" data-action="reload">
+												<i class="icon-arrow-right"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="widget-body list-body dd">
+										<ol class="widget-main dd-list list-main dd-list">
+											<li class="list-item dd-item" data-id="4">
+												<div class="dd-handle">
+													Lorem sipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+												</div>
+											</li>
+
+											<li class="list-item dd-item item-red2" data-id="5">
+												<div class="dd-handle">
+													Item 5
+												</div>
+
+												<ol class="dd-list">
+													<li class="list-item dd-item item-orange" data-id="6">
+														<div class="dd-handle"> Item 6 </div>
+													</li>
+
+													<li class="list-item dd-item item-red" data-id="7">
+														<div class="dd-handle">Item 7</div>
+													</li>
+
+													<li class="list-item dd-item item-blue2" data-id="8">
+														<div class="dd-handle">Item 8</div>
+													</li>
+												</ol>
+											</li>
+											
+										</ol>
+									</div>
+								</div>
+								<!-- <div class="widget-box listerly-list">
+									<div class="widget-header listerly-list-header widget-header-small header-color-blue2">
+										<h6>
+											Fourth
+										</h6>
+
+										<div class="widget-toolbar">
+											<a href="#" data-action="settings">
+												<i class="icon-arrow-left"></i>
+											</a>
+
+											<a href="#" data-action="reload">
+												<i class="icon-arrow-right"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="widget-body">
+										<div class="widget-main">
+											<p class="alert alert-info">
+												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+											</p>
+										</div>
+									</div>
+								</div>
+								<div class="widget-box listerly-list">
+									<div class="widget-header listerly-list-header widget-header-small header-color-purple">
+										<h6>
+											Fifth
+										</h6>
+
+										<div class="widget-toolbar">
+											<a href="#" data-action="settings">
+												<i class="icon-arrow-left"></i>
+											</a>
+
+											<a href="#" data-action="reload">
+												<i class="icon-arrow-right"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="widget-body">
+										<div class="widget-main">
+											<p class="alert alert-info">
+												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+											</p>
+										</div>
+									</div>
+								</div>
+								<div class="widget-box listerly-list">
+									<div class="widget-header listerly-list-header widget-header-small header-color-green3">
+										<h6>
+											Sixth
+										</h6>
+
+										<div class="widget-toolbar">
+											<a href="#" data-action="settings">
+												<i class="icon-arrow-left"></i>
+											</a>
+
+											<a href="#" data-action="reload">
+												<i class="icon-arrow-right"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="widget-body">
+										<div class="widget-main">
+											<p class="alert alert-info">
+												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+											</p>
+										</div>
+									</div>
+								</div>  -->
+						</div>
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+				<div class="ace-settings-container" id="settings-container">
+					<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+						<i class="icon-cogs"></i>
+					</div>
+					<div class="ace-settings-box" id="ace-settings-box">
+						<div>Hello
+						</div>
+
+						<div> Is it me you're looking for?
+						</div>
+
+						<div> And I wonder what you do? Are you somewhere feeling lonely? Or is someone loving you?
+						</div>
+
+						<div>For I haven't got a clue.
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container" />
+							<label class="lbl" for="ace-settings-add-container">
+								Inside
+								<b>.container</b>
+							</label>
+						</div>
+					</div>
+				</div><!-- /#ace-settings-container -->
+				
+			</div><!-- /.main-container-inner -->
+		</div><!-- /.main-container -->
+		<div id="loadingMessage" style="display:none;">
+			<img src="/img/loading/loading2.gif" />Loading
+		</div> 
+		<div id="loggedInDropdown" style="display:none;">
+			<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+				<li>
+					<a href="#/settings">
+						<i class="icon-cog"></i>
+						Settings
+					</a>
+				</li>
+
+				<li>
+					<a href="#/profile">
+						<i class="icon-user"></i>
+						Profile
+					</a>
+				</li>
+
+				<!-- <li class="divider"></li> -->
+
+				<li>
+					<a href="/authenticate/logout">
+						<i class="icon-off"></i>
+						Logout
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div id="loggedOutDropdown" style="display:none;">
+			<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+				<li>
+					<a href="/authenticate/facebook">
+						<i class="icon-foo iconl-facebook"></i>
+						Login with Facebook
+					</a>
+				</li>
+				<li>
+					<a href="/authenticate/google">
+						<i class="icon-foo iconl-gplus"></i>
+						Login with Google
+					</a>
+				</li>
+				<li>
+					<a href="/authenticate/twitter">
+						<i class="icon-foo iconl-twitter"></i>
+						Login with Twitter
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div id="userProfileModal" class="modal fade" data-backdrop="static" data-keyboard="false">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+		        <h4 class="modal-title">Your Profile</h4>
+		      </div>
+		      <div class="modal-body">
+				<form class="form-horizontal" role="form" id="loginModal" >
+					<div>Please complete your user profile: </div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<input type="hidden" id="form-field-id" />
+						<label class="col-sm-3 control-label no-padding-right" for="form-field-email"> Email address </label>
+
+						<div class="col-sm-9">
+							<span class="input-icon input-icon-right" style="width: 80%">
+								<input type="text" placeholder="Contact email" id="form-field-email" style="width: 100%" data-parsley-type="email" data-parsley-required="true"/>
+								<i class="icon-envelope blue"></i>
+							</span>
+						</div>
+					</div>
+
+					<div class="form-group form-field-email-note">
+						<div class="col-sm-3">
+							&nbsp;
+						</div>
+						<div class="col-sm-9">
+							Your email address will never be used to send you unsolicited mail. 
+							It will be used only if we need to contact you regarding service updates. 
+						</div>
+					</div>
+
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"> Name </label>
+
+						<div class="col-sm-9">
+								<input type="text" placeholder="First Name" id="form-field-firstName" data-parsley-required="true" />
+								<input type="text" placeholder="Last Name" id="form-field-lastName" />
+						</div>
+					</div>
+
+					<div class="space-4"></div>
+
+					<div class="clearfix form-actions">
+						<div class="col-md-offset-10 col-md-2">
+							<button class="btn btn-info" type="button" data-action="userprofilesave" data-id="none">
+								<i class="icon-ok bigger-110"></i>
+								Save
+							</button>
+						</div>
+					</div>
+				</form>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script type="text/javascript">
+ window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+		<script type="text/javascript">
+			if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<!--[if lte IE 8]>
+		  <script src="/assets/js/excanvas.min.js"></script>
+		<![endif]-->
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.1/jquery.slimscroll.min.js"></script>
+		<script src="/js/custom.jquery.nestable.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.66.0-2013.10.09/jquery.blockUI.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-browser/0.0.6/jquery.browser.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-hashchange/v1.3/jquery.ba-hashchange.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+		<script src="/assets/js/jstorage.min.js"></script>
+		<script src="/assets/js/uncompressed/parsley-2.0.0-rc5.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.min.js"></script>
+
+		<!-- ace scripts -->
+		<script src="/assets/js/ace-elements.min.js"></script>
+		<script src="/assets/js/uncompressed/ace.js"></script>
+
+		<!-- inline scripts related to this page -->
+		<script src="/js/listerly.js"></script>
+		<script src="/js/listerlyUtil.js"></script>
+		<script src="/js/listerlyRouter.js"></script>
+		<script src="/js/listerlyView.js"></script>
+		<script type="text/javascript">
+		var listerly = new Listerly();
+		jQuery(function($) {
+			listerly.init();
+		})
+		</script>
+		<script id="sidebar-boardlist-template" type="text/x-handlebars-template">
+			{{#each spaces}}
+			<li class="sidebar-element space-sidebar" id="sidebar-space-{{id}}">
+				<a href="#/space/{{id}}">
+					<i class="icon-fooo iconl-th-list"></i>
+					{{name}}
+				</a>
+				{{#if views.length}}
+				<ul class="submenu" id="sidebar-space-views-{{id}}">
+					{{#each views}}
+					<li class="sidebar-element" id="sidebar-space-view-{{uuid}}">
+						<a href="#/space/{{../id}}/view/{{uuid}}">
+							<i class="icon-desktop"></i>
+							{{name}}
+						</a>
+					</li>
+					{{/each}}
+				</ul>
+				{{/if}}
+			</li>
+			{{/each}}
+		</script>
+	</body>
+</html>

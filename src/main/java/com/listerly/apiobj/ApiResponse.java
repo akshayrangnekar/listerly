@@ -1,4 +1,5 @@
-package com.listerly.apiobj.user;
+package com.listerly.apiobj;
+
 
 public class ApiResponse {
 	public static enum ResponseType {

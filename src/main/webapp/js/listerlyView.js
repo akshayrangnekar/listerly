@@ -4,7 +4,7 @@ function ListerlyMainView() {
 	$('#listerly-sidebar-collapse').on(ace.click_event, function(){
 		$minimized = $('#sidebar').hasClass('menu-min');
 		listerly.mainView.sidebar_collapsed(!$minimized);//@ ace-extra.js
-		listerly.currentListView.reLayout();
+		listerly.mainView.reLayout();
 	});
 	this.savedSidebarState();
 	this.formMappings = {
@@ -19,6 +19,11 @@ function ListerlyMainView() {
 				]
 			}, 
 	}
+	this.initializeListeners();
+
+	// Then relayout
+	this.reLayout();
+	
 }
 
 ListerlyMainView.prototype.blockMainScreen = function ListerlyMainView_blockMainScreen() {
@@ -167,7 +172,7 @@ ListerlyMainView.prototype.hideForm = function ListerlyMainView_hideForm(key) {
 }
 
 ListerlyMainView.prototype.showSpaceList = function ListerlyMainView_showSpaceList(spaceList) {
-	var menuSource = $('#sidebar-boardlist-template').html();
+	var menuSource = $('#sidebar-spacelist-template').html();
 	var menuTemplate = Handlebars.compile( menuSource );
 	var theData = menuTemplate(spaceList);
 	$(".space-nav").remove();
@@ -190,39 +195,88 @@ ListerlyMainView.prototype.setSidebarSpaceAndBreadcrumbs = function ListerlyMain
 	}
 }
 
-function ListerlyView() {
+ListerlyMainView.prototype.initializeListeners = function () {
+	$(window).on("resize.ListerlyMainView", $.proxy(this.reLayout, this)); //Use jQuery proxy to preserve context of this
+}
+
+ListerlyMainView.prototype.reLayout = function() {
+	var dimensions = {};
+	this.calculateDimensions(dimensions);
+	this.sizeMainArea(dimensions);
+
+	if (this.currentSubview) {
+		this.currentSubview.reLayout(dimensions);
+	}
+}
+
+ListerlyMainView.prototype.showSubview = function(subView) {
+	$("#lists").empty();
+	this.currentSubview = subView;
+	this.currentSubview.init();
+	this.reLayout();
+}
+
+ListerlyMainView.prototype.sizeMainArea = function(dimensions) {
+	$(".page-content").height(dimensions["lists-height"]);
+}
+
+ListerlyMainView.prototype.calculateDimensions = function ListerlyMainView_calculateDimensions(dimensions) {
+	var oH = $( window ).innerHeight();
+	var headerH = $(".navbar").height(); 
+	var topBarH = $("#breadcrumbs").height();
+	var myH  = (oH - (headerH + topBarH));
+	listerly.log("layout", "myH: " + myH);
+	dimensions["lists-height"] = myH;
+
+	var oW = $(window).innerWidth();
+	var sideW = $("#sidebar").width();
+	if ($("#sidebar").is(":visible")) {
+		dimensions["lists-width"] = (oW - sideW);
+	} else {
+		dimensions["lists-width"] = (oW);
+	}
+}
+
+function ListerlySpaceView(model) {
+	this.model = model;
+	this.layoutType = this.model.layoutType;
+	var listsSource = $('#lists-template').html(); // WE COULD LOOKUP SEPARATE TEMPLATES BY LAYOUT TYPE
+	this.listsTemplate = Handlebars.compile( listsSource );
 };
 
-ListerlyView.prototype.init = function (layoutType) {
-	this.layoutType = layoutType;
-	this.initializeListeners();
+ListerlySpaceView.prototype.init = function () {
+	listerly.log("loadspace", "Layout type: " + this.layoutType);
 
 	// Make sure model fields are loaded
-	this.loadModelFieldsDUMMY();
+	this.loadModelFields();
+	
+	this.writeLists();
 	
 	// Calculate "magic numbers" 
 	this.calculateStyleMagicNumbers();
 	
-	// Then relayout
-	this.reLayout();
 	$('.dd').nestable({maxDepth: 4, group: 1});
 }
 
-ListerlyView.prototype.loadModelFieldsDUMMY = function() { 
-	// TODO: GET THIS FROM THE MODEL
-	var numL = $(".listerly-list").length;
+ListerlySpaceView.prototype.writeLists = function() {
+	var theData = this.listsTemplate(this.model);
+	$("#lists").append(theData);
+}
+
+ListerlySpaceView.prototype.loadModelFields = function() { 
+	var numL = this.model.numberOfLists;
 	var magicNumbers = {};
 	
 	magicNumbers.numberOfLists = numL;
 	this.magicNumbers = magicNumbers;
 }
 
-ListerlyView.prototype.calculateStyleMagicNumbers = function() {
+ListerlySpaceView.prototype.calculateStyleMagicNumbers = function() {
 	var magicNumbers = this.magicNumbers;
 	var numL = magicNumbers.numberOfLists;
 
 	if (numL == 0) {
-		listerly.log("There are no lists.");
+		listerly.log("loadSpace", "There are no lists.");
 	} else {
 		var elem = $(".listerly-list");
 		magicNumbers.listMarginTop = parseInt(elem.css("margin-top"));
@@ -251,15 +305,15 @@ ListerlyView.prototype.calculateStyleMagicNumbers = function() {
 	this.magicNumbers = magicNumbers;
 }
 
-ListerlyView.prototype.reLayout = function() {
-	var dimensions = {};
-	this.calculateDimensions(dimensions);
+ListerlySpaceView.prototype.reLayout = function(dimensions) {
+	// var dimensions = {};
+	// this.calculateDimensions(dimensions);
 	this.determineLayout(dimensions);
-	this.sizeMainArea(dimensions);
+	this.sizeListArea(dimensions);
 	this.resizeListHeights(dimensions);
 }
 
-ListerlyView.prototype.determineLayout = function (dimensions) {
+ListerlySpaceView.prototype.determineLayout = function (dimensions) {
 	// Am I big enough to layout? 
 	$("#lists").removeClass();
 	if (dimensions["lists-width"] < kLV_MIN_LAYOUT_WIDTH) {
@@ -269,10 +323,10 @@ ListerlyView.prototype.determineLayout = function (dimensions) {
 	}
 	else {
 		// Otherwise 
-		if (this.layoutType == listerly.LayoutEnum.GRID) {
+		if (this.layoutType == "GRID") {
 			dimensions.layout = "GRID";
 			$("#lists").addClass("grid");
-		} else if (this.layoutType == listerly.LayoutEnum.LIST) {
+		} else if (this.layoutType == "LIST") {
 			dimensions.layout = "LIST";
 			$("#lists").addClass("list");
 		} else {
@@ -281,12 +335,8 @@ ListerlyView.prototype.determineLayout = function (dimensions) {
 	}
 } 
 
-ListerlyView.prototype.initializeListeners = function () {
-	$(window).on("resize.ListerlyView", $.proxy(this.reLayout, this)); //Use jQuery proxy to preserve context of this
-}
-
-ListerlyView.prototype.sizeMainArea = function(dimensions) {
-	$(".page-content").height(dimensions["lists-height"]);
+ListerlySpaceView.prototype.sizeListArea = function(dimensions) {
+	// $(".page-content").height(dimensions["lists-height"]);
 
 	$("#lists").removeAttr('style');
 	
@@ -326,7 +376,7 @@ ListerlyView.prototype.sizeMainArea = function(dimensions) {
 	}
 }
 
-ListerlyView.prototype.resizeListHeights = function (dimensions) {
+ListerlySpaceView.prototype.resizeListHeights = function (dimensions) {
 	var lHeight = dimensions.singleListHeight;
 	var lWidth = dimensions.singleListWidth;
 	$(".listerly-list").each(function() {
@@ -340,20 +390,4 @@ ListerlyView.prototype.resizeListHeights = function (dimensions) {
 	});
 }
 
-ListerlyView.prototype.calculateDimensions = function ListerlyView_calculateDimensions(dimensions) {
-	var oH = $( window ).innerHeight();
-	var headerH = $(".navbar").height(); 
-	var topBarH = $("#breadcrumbs").height();
-	var myH  = (oH - (headerH + topBarH));
-	listerly.log("myH: " + myH);
-	dimensions["lists-height"] = myH;
-
-	var oW = $(window).innerWidth();
-	var sideW = $("#sidebar").width();
-	if ($("#sidebar").is(":visible")) {
-		dimensions["lists-width"] = (oW - sideW);
-	} else {
-		dimensions["lists-width"] = (oW);
-	}
-}
 

@@ -7,7 +7,7 @@ public class FieldValue implements IFieldValue {
 	
 	String fieldId;
 	String fieldValue;
-	Long fieldPriority;
+//	Long fieldPriority;
 	
 	@Override
 	public String getFieldId() {
@@ -25,13 +25,13 @@ public class FieldValue implements IFieldValue {
 	public void setFieldValue(String fieldValue) {
 		this.fieldValue = fieldValue;
 	}
-	@Override
-	public Long getFieldPriority() {
-		return fieldPriority;
-	}
-	@Override
-	public void setFieldPriority(Long fieldPriority) {
-		this.fieldPriority = fieldPriority;
-	}
+//	@Override
+//	public Long getFieldPriority() {
+//		return fieldPriority;
+//	}
+//	@Override
+//	public void setFieldPriority(Long fieldPriority) {
+//		this.fieldPriority = fieldPriority;
+//	}
 
 }

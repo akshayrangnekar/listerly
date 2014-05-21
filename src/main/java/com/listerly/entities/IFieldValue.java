@@ -9,6 +9,6 @@ public interface IFieldValue extends Serializable {
 	public String getFieldValue();
 	public void setFieldValue(String in);
 	
-	public Long getFieldPriority();
-	public void setFieldPriority(Long in);
+//	public Long getFieldPriority();
+//	public void setFieldPriority(Long in);
 }

@@ -246,3 +246,7 @@ ul.parsley-errors-list li:before {
 .nav-list>li.active>a, .nav-list>li.active>a:hover, .nav-list>li.active>a:focus, .nav-list>li.active>a:active, .nav-list>li .submenu>li>a, .nav-list>li>a {
 	font-size: 11px;
 }
+
+.navbar-container {
+	padding-right: 0px;
+}

@@ -5,12 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.OnLoad;
 import com.googlecode.objectify.annotation.OnSave;
 import com.googlecode.objectify.annotation.Unindex;
@@ -31,7 +29,6 @@ public class Space implements ISpace {
 	@Id private Long id;
 	@Unindex private String name;
 	@Unindex private List<Field> fields = new ArrayList<>();
-	@Index @Load List<Ref<Item>> items;
 	@Index private Long parentId;
 	@Unindex private Date created = new Date();
 	@Unindex private List<SpaceView> views = new ArrayList<>();
@@ -84,36 +81,36 @@ public class Space implements ISpace {
 	}
 	
 	@OnLoad void onLoadCallback() {
-		log.fine("Calling onLoadCallback()");
+		log.finer("Calling onLoadCallback()");
 		for (Field setting : fields) {
-			log.fine("Deserializing a field setting.");
+			log.finer("Deserializing a field setting.");
 			setting.deserializeSettingsMap();
 		}
 	}
 	
 	@OnSave void onSaveCallback() {
-		log.fine("Calling onSaveCallback()");
+		log.finer("Calling onSaveCallback()");
 		for (Field setting : fields) {
-			log.fine("Serializing a field setting.");
+			log.finer("Serializing a field setting.");
 			setting.serializeSettingsMap();
 		}
 	}
 
 	@Override
 	public IField createField() {
-		log.fine("Creating a new field setting");
+		log.finer("Creating a new field setting");
 		IField fs = new Field();
 		addFieldSetting(fs);
-		log.fine("Field settings now: " + getFields().size());
+		log.finer("Field settings now: " + getFields().size());
 		return fs;
 	}
 
 	@Override
 	public IField createField(int index) {
-		log.fine("Creating a new field setting");
+		log.finer("Creating a new field setting");
 		IField fs = new Field();
 		addFieldSetting(index, fs);
-		log.fine("Field settings now: " + getFields().size());
+		log.finer("Field settings now: " + getFields().size());
 		return fs;
 	}
 

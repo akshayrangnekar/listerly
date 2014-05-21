@@ -1,9 +1,10 @@
-package com.listerly.apiobj.user;
+package com.listerly.apiobj.space;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.listerly.apiobj.AbstractApiObject;
 import com.listerly.entities.IField;
 import com.listerly.entities.IFieldOption;
 
@@ -22,7 +23,7 @@ public class AField extends AbstractApiObject<IField> {
 			this.options = new ArrayList<>();
 			for (int i = 0; i < options.size(); i++) {
 				IFieldOption option = options.get(i);
-				log.fine("Creating new option for " + option.getDisplay());
+				log.finer("Creating new option for " + option.getDisplay());
 				this.options.add(new AFieldOption(option));
 			}
 		}

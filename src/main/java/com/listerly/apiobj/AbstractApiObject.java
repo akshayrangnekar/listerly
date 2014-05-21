@@ -1,4 +1,4 @@
-package com.listerly.apiobj.user;
+package com.listerly.apiobj;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-abstract class AbstractApiObject<T> {
+public abstract class AbstractApiObject<T> {
 	private static Logger log = Logger.getLogger(AbstractApiObject.class.getName());	
 
 	public AbstractApiObject() {

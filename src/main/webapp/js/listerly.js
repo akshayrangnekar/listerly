@@ -26,10 +26,6 @@ function Listerly() {
 	this.loggingEnabled = gEnableLogging;
 	this.logMethods = gLogMethods;
 	this.currentListView = undefined;
-	this.LayoutEnum = {
-		GRID: 1,
-		LIST: 2
-	}
 	this.actions = {
 		hideArea: function (e) {
 			// console.log("Context for hideArea");
@@ -55,6 +51,9 @@ function Listerly() {
 			$( "[data-action='listcheckboxchecked'][data-id='" + dataid +"']" ).hide();
 			$( "[data-action='listcheckbox'][data-id='" + dataid +"']" ).show();
 		},
+		listItemClick: function(action, dataid) {
+			listerly.log("loadspace", "Click on list item with dataid: " + dataid);
+		},
 		userprofilesave: function(action, dataid) {
 			listerly.saveUserProfile();
 		}
@@ -75,9 +74,9 @@ Listerly.prototype.init = function listerly_init() {
 	// Check login state and set up login pane
 	this.checkLoginState();
 	
-	// See if we should preload a space
-	this.currentListView = new ListerlyView();
-	this.currentListView.init(this.LayoutEnum.LIST);
+	// // See if we should preload a space
+	// this.currentListView = new ListerlyView();
+	// this.currentListView.init(this.LayoutEnum.LIST);
 }
 
 Listerly.prototype.logMessage = function listerly_log(message) {
@@ -280,6 +279,7 @@ Listerly.prototype.checkProfile = function listerly_checkProfile() {
 Listerly.prototype.loadSpace = function listerly_loadSpace(pathDetails) {
 	this.mainView.blockMainScreen();
 
+	this.spaceController = new ListerlySpaceController(this);
 	this.logObject("loadspace", "Loading space with arguments: ", pathDetails);
 	var spaceId = pathDetails.space;
 	this.log("loadspace", "Finding space with id: " + spaceId);
@@ -288,24 +288,7 @@ Listerly.prototype.loadSpace = function listerly_loadSpace(pathDetails) {
 	if (spaceM && pathDetails.view) {
 		spaceVM = this.getSpaceViewMetadata(spaceM, pathDetails.view);
 	}
-	this.mainView.setSidebarSpaceAndBreadcrumbs(spaceM, spaceVM);
-	this.loadSpaceFromServer(spaceM);
-}
-
-Listerly.prototype.loadSpaceFromServer = function loadSpaceFromServer(spaceM) {
-	this.log("loadspace", "Loading Space: " + spaceM.id);
-	$.ajax({
-		dataType: "json",
-		url: "/api/v1/space/" + spaceM.id,
-		data: {},
-		async: true,
-		cache: false,
-		context: this,
-		success: function finishedLoadingSpacesCallback(data, textStatus, jqXHR) {
-			this.logObject("loadspace", "Spaces status: " + textStatus, data);
-			this.mainView.unblockMainScreen();
-		}
-	});
+	this.spaceController.init(spaceM, spaceVM);
 }
 
 Listerly.prototype.getSpaceMetadata = function(spaceId) {

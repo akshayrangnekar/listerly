@@ -1,4 +1,4 @@
-package com.listerly.apiobj.user;
+package com.listerly.apiobj.space;
 
 import java.util.List;
 

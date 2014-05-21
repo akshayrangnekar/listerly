@@ -6,6 +6,8 @@ import java.util.List;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+import com.listerly.entities.IFieldValue;
 import com.listerly.entities.IItem;
 
 @Entity
@@ -18,7 +20,7 @@ public class Item implements IItem {
 
 	@Id private Long id;
 	private List<FieldValue> fields = new ArrayList<>();
-	private Long spaceId;
+	@Index private Long spaceId;
 	private Long parentId;
 
 	public Long getSpaceId() {
@@ -45,14 +47,17 @@ public class Item implements IItem {
 		return fields;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void setFields(List<? extends FieldValue> fields) {
-		this.fields = (List<FieldValue>) fields;
+	protected void addField(IFieldValue in) {
+		this.fields.add((FieldValue)in);
 	}
 
 	@Override
-	public void addField(FieldValue in) {
-		this.fields.add(in);
+	public IFieldValue createField() {
+		FieldValue fieldValue = new FieldValue();
+		addField(fieldValue);
+		return fieldValue;
 	}
+	
+	
 
 }

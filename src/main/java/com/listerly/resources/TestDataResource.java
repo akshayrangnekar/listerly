@@ -2,6 +2,7 @@ package com.listerly.resources;
 
 import static com.listerly.config.objectify.OfyService.ofy;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -19,6 +20,8 @@ import com.listerly.dao.UserDAO;
 import com.listerly.entities.IAccessRule.AccessLevel;
 import com.listerly.entities.IField;
 import com.listerly.entities.IFieldOption;
+import com.listerly.entities.IFieldValue;
+import com.listerly.entities.IItem;
 import com.listerly.entities.ISpace;
 import com.listerly.entities.ISpaceView;
 import com.listerly.entities.IUser;
@@ -36,14 +39,48 @@ public class TestDataResource {
 		StringBuilder builder = new StringBuilder();
 		log.fine("Generating test data.");
 		ISpace space = createNewSpace("Akshay's Notes", "Importance", "Category");
+		setupSpace(space);
+		createItemsForSpace(space, 10);
+		space = createNewSpace("Work Tasks", "Level", "Group");
 		space = setupSpace(space);
-		space = createNewSpace("Akshay's Work Tasks Notes", "Level", "Group");
-		space = setupSpace(space);
+		createItemsForSpace(space, 5);
 
 		builder.append("Created board: ").append(space.getId()).append("\n");
 		return builder.toString();
 	}
 	
+	private void createItemsForSpace(ISpace space, int items) {
+		RandomString rndStr = new RandomString(20);
+		Random random = new Random();
+		
+		for (int i = 0; i < items; i++) {
+			IItem item = spaceDAO.createItemInSpace(space);
+			for (IField field : space.getFields()) {
+				IFieldValue fieldValue = item.createField();
+				fieldValue.setFieldId(field.getUuid());
+				
+				switch (field.getType()) {
+				case "text":
+					fieldValue.setFieldValue(rndStr.nextString());
+					break;
+				case "booleandate":
+					if (random.nextBoolean()) {
+						fieldValue.setFieldValue("" + new Date().getTime());
+					}
+					break;
+				case "select-fixed":
+				case "select":
+					List<? extends IFieldOption> options = field.getFieldOptions();
+					int rndOption = random.nextInt(options.size());
+					fieldValue.setFieldValue(options.get(rndOption).getUuid());
+				default:
+					break;
+				}
+			}
+			spaceDAO.saveItem(item);
+		}
+	}
+
 	private ISpace setupSpace(ISpace space) {
 		space = createSpaceViews(space);
 		log.fine("Saving space.");
@@ -61,6 +98,7 @@ public class TestDataResource {
 		ISpace space = spaceDAO.findById(spaceId);
 		return space;
 	}
+	
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/transactExample") public String test6() {
@@ -92,6 +130,7 @@ public class TestDataResource {
 		
 		return user;
 	}
+
 	private ISpace createNewSpace(String name, String importanceFieldName, String categoryFieldName) {
 		log.fine("Creating space.");
 		ISpace space = spaceDAO.create();
@@ -180,5 +219,37 @@ public class TestDataResource {
 		}
 		
 		return space;
+	}
+
+	public static class RandomString {
+
+		private static char[] symbols;
+
+		static {
+			StringBuilder tmp = new StringBuilder();
+			for (char ch = '0'; ch <= '9'; ++ch)
+				tmp.append(ch);
+			for (char ch = 'a'; ch <= 'z'; ++ch)
+				tmp.append(ch);
+			for (char ch = 'A'; ch <= 'Z'; ++ch)
+				tmp.append(ch);
+			symbols = tmp.toString().toCharArray();
+		}   
+
+		private final Random random = new Random();
+
+		private final char[] buf;
+
+		public RandomString(int length) {
+			if (length < 1)
+				throw new IllegalArgumentException("length < 1: " + length);
+			buf = new char[length];
+		}
+
+		public String nextString() {
+			for (int idx = 0; idx < buf.length; ++idx) 
+				buf[idx] = symbols[random.nextInt(symbols.length)];
+			return new String(buf);
+		}
 	}
 }
