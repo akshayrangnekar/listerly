@@ -180,8 +180,8 @@ ListerlyMainView.prototype.showSpaceList = function ListerlyMainView_showSpaceLi
 }
 
 ListerlyMainView.prototype.setSidebarSpaceAndBreadcrumbs = function ListerlyMainView_setSidebarSpace(space, view) {
-	listerly.logObject("loadspace", "loading space", space);
-	listerly.logObject("loadspace", "loading space view", view);
+	listerly.logObject("loadspace.2", "loading space", space);
+	listerly.logObject("loadspace.2", "loading space view", view);
 	
 	$(".sidebar-element.active").removeClass("active");
 	$("#breadcrumbs .crumb").remove();
@@ -245,7 +245,7 @@ function ListerlySpaceView(model) {
 };
 
 ListerlySpaceView.prototype.init = function () {
-	listerly.log("loadspace", "Layout type: " + this.layoutType);
+	listerly.log("loadspace.2", "Layout type: " + this.layoutType);
 
 	// Make sure model fields are loaded
 	this.loadModelFields();
@@ -255,7 +255,7 @@ ListerlySpaceView.prototype.init = function () {
 	// Calculate "magic numbers" 
 	this.calculateStyleMagicNumbers();
 	
-	$('.dd').nestable({maxDepth: 4, group: 1});
+	$('.dd').nestable({maxDepth: 1, group: 1});
 }
 
 ListerlySpaceView.prototype.writeLists = function() {

@@ -93,6 +93,42 @@ public class TestDataResource {
 	}
 	
 	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/flickBoolean") public String flickBoolean() {
+		StringBuilder builder = new StringBuilder();
+		
+		boolean set = true;
+		
+		List<? extends ISpace> all = spaceDAO.findAll();
+		for (ISpace space : all) {
+			String name = space.getName();
+			if (name.contains("Akshay")) {
+				List<? extends IItem> cardsInSpace = spaceDAO.findAllCardsInSpace(space);
+				for (IItem item : cardsInSpace) {
+					List<? extends IField> fields = space.getFields();
+					for (IField field : fields) {
+						if (field.getType().equals("booleanDate")) {
+							List<? extends IFieldValue> fieldValues = item.getFields();
+							for (IFieldValue fv : fieldValues) {
+								if (fv.getFieldId().equals(field.getUuid())) {
+									if (set) {
+										fv.setFieldValue("" + new Date().getTime());
+										builder.append("Set.\n");
+									}
+									set = !set;
+								}
+							}
+							
+						}
+					}
+					spaceDAO.saveItem(item);
+				}
+			}
+		}
+		return builder.toString();
+	}
+	
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/space/{spaceId}") public Object retrieveSpace(@PathParam("spaceId") Long spaceId) {
 		ISpace space = spaceDAO.findById(spaceId);

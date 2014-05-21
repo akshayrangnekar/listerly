@@ -464,6 +464,9 @@
                 }
                 if (!this.dragRootEl.find(opt.itemNodeName).length) {
                     this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
+					// console.log("Creating empty element");
+					// console.log(this.dragRootEl);
+					// console.log(opt.itemNodeName);
                 }
                 // parent root list has changed
                 if (isNewRoot) {

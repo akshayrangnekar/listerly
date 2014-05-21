@@ -8,6 +8,22 @@ var gLogMethods = {
 	"loadspace": true
 };
 
+Handlebars.registerHelper('ifv', function (conditional, options) {
+  if (options.hash.value === conditional) {
+    return options.fn(this)
+  } else {
+    return options.inverse(this);
+  }
+});
+
+Handlebars.registerHelper('ifHas', function (theArray, options) {
+  if (theArray.length > 0) {
+    return options.fn(this)
+  } else {
+    return options.inverse(this);
+  }
+});
+
 function listerly_fixFunctionNames(inproto) {
 	for (x in inproto) {
 		if (listerly_isFunction(inproto[x])) {
@@ -156,7 +172,7 @@ Listerly.prototype.setCurrentUser = function listerly_setCurrentUser(user) {
 }
 
 Listerly.prototype.loadSpacesForUser = function listerly_loadSpacesForUser(user) {
-	this.log("Loading Spaces For User.");
+	this.log("loadspace.2", "Loading Spaces For User.");
 	this.startLoadingResource();
 	$.ajax({
 		dataType: "json",
@@ -280,9 +296,9 @@ Listerly.prototype.loadSpace = function listerly_loadSpace(pathDetails) {
 	this.mainView.blockMainScreen();
 
 	this.spaceController = new ListerlySpaceController(this);
-	this.logObject("loadspace", "Loading space with arguments: ", pathDetails);
+	this.logObject("loadspace.2", "Loading space with arguments: ", pathDetails);
 	var spaceId = pathDetails.space;
-	this.log("loadspace", "Finding space with id: " + spaceId);
+	this.log("loadspace.2", "Finding space with id: " + spaceId);
 	var spaceM = this.getSpaceMetadata(pathDetails.space);
 	var spaceVM = undefined;
 	if (spaceM && pathDetails.view) {
@@ -292,11 +308,10 @@ Listerly.prototype.loadSpace = function listerly_loadSpace(pathDetails) {
 }
 
 Listerly.prototype.getSpaceMetadata = function(spaceId) {
-	this.log("loadspace", "Finding space with id: " + spaceId);
 	if (this.spaces) {
 		var arr = this.spaces.spaces;
 		for (var i=0; i<arr.length; i++) {
-			this.log("loadspace", "Comparing with space with id: " + arr[i].id);
+			this.log("loadspace.2", "Comparing with space with id: " + arr[i].id);
 		    if (arr[i].id == spaceId) return arr[i];
 		}
 	}

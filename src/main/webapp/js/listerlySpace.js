@@ -45,33 +45,14 @@ ListerlySpaceController.prototype.setupView = function() {
 			}
 		}
 	}
-	this.listerly.logObject("loadspace", "Setting up model for view of space: " + this.spaceMeta.id + " and view ", this.view);
+	this.listerly.logObject("loadspace.2", "Setting up model for view of space: " + this.spaceMeta.id + " and view ", this.view);
 }
 
 ListerlySpaceController.prototype.setupModel = function() {
 	var model = new ListerlySpaceModel(this.listerly, this);
-	var field = undefined;
-
-	for (var i = 0; i < this.space.fields.length; i++) {
-		if (this.space.fields[i].uuid == this.view.primaryFieldUuid) {
-			field = this.space.fields[i];
-			this.listerly.logObject("loadspace", "setupView:Found correct field for view: ", field);
-		}
-	}
-	model.numberOfLists = field.options.length;
-	model.lists = [];
 	
-	for (var i = 0; i < field.options.length; i++) {
-		var option = field.options[i];
-		var list = {};
-		list.title = "Title: " + option.display;
-		list.uuid = option.uuid;
-		list.color = option.colorCode;
-		model.lists.push(list);
-		this.listerly.logObject("loadspace", "Created a list: ", list);
-	}
-	
-	model.layoutType = this.view.layoutType;
+	model.init(this.space, this.view);
+	this.listerly.logObject("loadspace.2", "Set up model", model);
 	
 	return model;
 }
@@ -81,7 +62,7 @@ ListerlySpaceController.prototype.getLayoutType = function() {
 }
 
 ListerlySpaceController.prototype.loadSpaceFromServer = function loadSpaceFromServer(spaceM) {
-	this.listerly.log("loadspace", "Loading Space: " + spaceM.id);
+	this.listerly.log("loadspace.2", "Loading Space: " + spaceM.id);
 	$.ajax({
 		dataType: "json",
 		url: "/api/v1/space/" + spaceM.id,
@@ -90,7 +71,7 @@ ListerlySpaceController.prototype.loadSpaceFromServer = function loadSpaceFromSe
 		cache: false,
 		context: this,
 		success: function finishedLoadingSpacesCallback(data, textStatus, jqXHR) {
-			this.listerly.logObject("loadspace", "Spaces status: " + textStatus, data);
+			this.listerly.logObject("loadspace.2", "Spaces status: " + textStatus, data);
 			this.loadSpaceCallback(data.response);
 			this.listerly.mainView.unblockMainScreen();
 		}
@@ -98,7 +79,7 @@ ListerlySpaceController.prototype.loadSpaceFromServer = function loadSpaceFromSe
 }
 
 ListerlySpaceController.prototype.loadSpaceCallback = function(space) {
-	this.listerly.log("loadspace", "Got back a space: " + space.name);
+	this.listerly.log("loadspace.2", "Got back a space: " + space.name);
 	if (this.setupSpace(space)) {
 		this.model = this.setupModel(space)
 		this.spaceView = new ListerlySpaceView(this.model);
@@ -109,9 +90,107 @@ ListerlySpaceController.prototype.loadSpaceCallback = function(space) {
 }
 
 function ListerlySpaceModel(listerly, controller) {
-	this.log = listerly.log;
-	this.logObject = listerly.logObject;
+	this.listerly = listerly;
 	this.controller = controller;
 }
 
+ListerlySpaceModel.prototype.init = function(space, view) {
+	var field = undefined;
+	var fieldMap = {};
+
+	// Find the correct field
+	for (var i = 0; i < space.fields.length; i++) {
+		if (space.fields[i].uuid == view.primaryFieldUuid) {
+			field = space.fields[i];
+			this.listerly.logObject("loadspace.2", "setupView:Found correct field for view: ", field);
+		}
+		fieldMap[space.fields[i].uuid] = space.fields[i];
+	}
+	
+	this.fieldMap = fieldMap;
+
+	// this.setField(field);
+	this.setupModelLists(field);
+	this.layoutType = view.layoutType;
+	this.setupModelItems(space.items, field, fieldMap, view);
+	this.removeTempMaps();
+	this.listerly.logObject("loadspace", "Finished model init", this);
+}
+
+ListerlySpaceModel.prototype.removeTempMaps = function() {
+	this.listMap = undefined;
+	this.fieldMap = undefined;
+}
+
+ListerlySpaceModel.prototype.setupModelLists = function(field) {
+	this.listerly.logObject("loadspace", "Field: ", field);
+	this.numberOfLists = field.options.length;
+	this.lists = [];
+	
+	this.listMap = {};
+	
+	for (var i = 0; i < field.options.length; i++) {
+		var option = field.options[i];
+		var list = {};
+		list.title = "" + option.display;
+		list.uuid = option.uuid;
+		list.color = option.colorCode;
+		list.items = new Array();
+		this.lists.push(list);
+		this.listMap[list.uuid] = list;
+		this.listerly.logObject("loadspace.2", "Created a list: ", list);
+	}
+}
+
+ListerlySpaceModel.prototype.setupModelItems = function(items, field, fieldMap, view) {
+	var itemMap = {};
+	for (var i in items) {
+		var item = items[i];
+		var modelItem = {};
+		modelItem.id = item.id;
+		modelItem.displayFields = new Array();
+		this.listerly.logObject("loadspace.2", "Item: ", item);
+		itemMap[item.id] = item;
+		for (var j in item.values) {
+			var itemValue = item.values[j];
+			if (itemValue.fieldId == field.uuid) {
+				var itemList = itemValue.fieldValue;
+				this.listMap[itemList].items.push(modelItem);
+			} else {
+				var theField = fieldMap[itemValue.fieldId];
+				var itemDisplayField = {"type": theField.type};
+				switch(theField.type) {
+				case "text":
+					itemDisplayField.value = itemValue.fieldValue;
+					modelItem.displayFields.push(itemDisplayField);
+				    break;
+				case "select":
+				case "select-fixed":
+					for (var k in theField.options) {
+						if (theField.options[k].uuid == itemValue.fieldValue) {
+							itemDisplayField.value = theField.options[k];
+						}
+					}
+					modelItem.displayFields.push(itemDisplayField);
+				    break;
+				case "booleanDate":
+					if (view.checkboxFieldUuid == itemValue.fieldId) {
+						//console.log("Found checkbox field");
+						if (itemValue.fieldValue) {
+							modelItem.checked = true;
+						} else {
+							modelItem.checked = false;
+						}
+					} 
+					break;
+				default:
+				    console.log(theField.type);
+				}
+			}
+		}
+	}
+	this.listerly.logObject("loadspace.2", "ItemMap: ", itemMap);
+	this.listerly.logObject("loadspace.2", "ListMap: ", this.listMap);
+	this.listerly.logObject("loadspace.2", "Lists: ", this.lists);
+}
 
