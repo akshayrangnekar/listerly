@@ -82,7 +82,7 @@ ListerlySpaceController.prototype.loadSpaceCallback = function(space) {
 	this.listerly.log("loadspace.2", "Got back a space: " + space.name);
 	if (this.setupSpace(space)) {
 		this.model = this.setupModel(space)
-		this.spaceView = new ListerlySpaceView(this.model);
+		this.spaceView = new ListerlySpaceView(this);
 		this.listerly.mainView.showSubview(this.spaceView);
 	} else {
 		this.listerly.log("loadspace", "Not showing space. Must have clicked a couple.");

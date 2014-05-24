@@ -237,8 +237,9 @@ ListerlyMainView.prototype.calculateDimensions = function ListerlyMainView_calcu
 	}
 }
 
-function ListerlySpaceView(model) {
-	this.model = model;
+function ListerlySpaceView(controller) {
+	this.controller = controller;
+	this.model = controller.model;
 	this.layoutType = this.model.layoutType;
 	var listsSource = $('#lists-template').html(); // WE COULD LOOKUP SEPARATE TEMPLATES BY LAYOUT TYPE
 	this.listsTemplate = Handlebars.compile( listsSource );

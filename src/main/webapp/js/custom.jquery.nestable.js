@@ -261,18 +261,11 @@
 	            mouse.offsetY = e.offsetY !== undefined ? e.offsetY : e.pageY - dragItem.offset().top;
 			}
 
-			// console.log("X0: " + mouse.offsetX);
-			// console.log("Y0: " + mouse.offsetY);
-			// console.log("X1: " + e.offsetX);
-			// console.log("Y1: " + e.offsetY);
-			// console.log("X2: " + (e.pageX - dragItem.offset().left));
-			// console.log("Y2: " + (e.pageY - dragItem.offset().top));
-			// // console.log(e);
-			// console.log(dragItem);
             mouse.startX = mouse.lastX = e.pageX;
             mouse.startY = mouse.lastY = e.pageY;
 
             this.dragRootEl = this.el;
+			console.log("Started at: " + this.dragRootEl[0].id);
 
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
@@ -374,6 +367,7 @@
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
+				
                 // increase horizontal level if previous sibling exists and is not collapsed
                 if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
                     // cannot increase level when item above is collapsed
@@ -420,9 +414,11 @@
             }
             if (this.pointEl.hasClass(opt.handleClass)) {
                 this.pointEl = this.pointEl.parent(opt.itemNodeName);
+				//console.log("Handle Class");
             }
             if (this.pointEl.hasClass(opt.emptyClass)) {
                 isEmpty = true;
+				//console.log("Is Empty");
             }
             else if (!this.pointEl.length || !this.pointEl.hasClass(opt.itemClass)) {
                 return;
@@ -452,6 +448,7 @@
                     list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
                     list.append(this.placeEl);
                     this.pointEl.replaceWith(list);
+					console.log("Appending element");
                 }
                 else if (before) {
                     this.pointEl.before(this.placeEl);
@@ -463,10 +460,14 @@
                     this.unsetParent(parent.parent());
                 }
                 if (!this.dragRootEl.find(opt.itemNodeName).length) {
-                    this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
-					// console.log("Creating empty element");
-					// console.log(this.dragRootEl);
-					// console.log(opt.itemNodeName);
+					if (!this.dragRootEl.find("div." + opt.emptyClass).length) {
+	                    this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
+						console.log("Creating empty element");
+						console.log(this.dragRootEl);
+						console.log(opt.itemNodeName);
+					} else {
+						console.log("Not creating. One already exists.");
+					}
                 }
                 // parent root list has changed
                 if (isNewRoot) {
